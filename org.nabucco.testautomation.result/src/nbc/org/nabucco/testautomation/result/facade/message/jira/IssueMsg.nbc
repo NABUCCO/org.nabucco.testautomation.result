@@ -1,0 +1,28 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.facade.message.jira;
+
+import org.nabucco.framework.base.facade.datatype.issuetracking.Issue;
+import org.nabucco.testautomation.result.facade.datatype.TestResult;
+import org.nabucco.framework.base.facade.datatype.code.Code;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-01-05
+@Version		1.0
+@Description	Message for transporting a Issue
+public Message IssueMsg {
+
+	private Datatype Issue[1] issue;
+	
+	private Datatype TestResult[0..*] testResults;
+	
+	@CodePath nabucco.testautomation.environment
+	private Datatype Code[0..1] environmentType;
+
+	@CodePath nabucco.testautomation.release
+	private Datatype Code[0..1] releaseType;
+
+}

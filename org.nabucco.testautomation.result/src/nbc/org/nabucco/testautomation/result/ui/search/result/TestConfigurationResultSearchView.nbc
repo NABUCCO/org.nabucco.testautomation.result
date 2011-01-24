@@ -1,0 +1,24 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.ui.search.result;
+
+import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-10-12
+@Version		1.0
+@Description 	Search view for datatype TestConfigurationResult
+@Id				org.nabucco.testautomation.result.ui.search.result.TestConfigurationResultSearchView
+public SearchView TestConfigurationResultSearchView {
+
+	private Datatype TestConfigurationResult[1] testConfigurationResult;
+	
+	@MappedField 		testConfigurationResult.name
+	@FieldLabelId		testConfigurationResult.name 
+	@FieldLabelDefault 	"Name"
+	private LabeledInputField testConfigurationResultName;
+	
+}

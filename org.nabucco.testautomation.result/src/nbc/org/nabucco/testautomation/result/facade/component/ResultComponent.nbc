@@ -1,0 +1,54 @@
+package org.nabucco.testautomation.result.facade.component;
+
+import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
+import org.nabucco.testautomation.result.facade.datatype.TestResult;
+import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
+import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
+import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
+import org.nabucco.testautomation.result.facade.datatype.manual.ManualTestResult;
+import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
+import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
+import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
+import org.nabucco.testautomation.result.facade.service.maintain.MaintainTestConfigurationResult;
+import org.nabucco.testautomation.result.facade.service.produce.ProduceTestResult;
+import org.nabucco.testautomation.result.facade.service.produce.ProduceTrace;
+import org.nabucco.testautomation.result.facade.service.search.SearchTestConfigurationResult;
+import org.nabucco.testautomation.result.facade.service.jira.JiraService;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-01-28
+@Version		1.0
+@Description	Component for testautomation result
+@ComponentPrefix rslt
+public Component ResultComponent {
+
+	private persistent Datatype TestConfigurationResult[1] testConfigurationResult;
+	
+	private persistent Datatype TestResultContainer[1] testResultContainer;
+
+	private persistent Datatype TestResult[1] testResult;
+
+	private persistent Datatype ManualTestResult[1] manualTestResult;
+
+	private persistent Datatype TestScriptResult[1] testScriptResult;
+
+	private persistent Datatype ActionTrace[1] actionTrace;
+
+	private persistent Datatype MessageTrace[1] messageTrace;
+
+	private persistent Datatype ScreenshotTrace[1] screenshotTrace;
+
+	private persistent Datatype FileTrace[1] fileTrace;
+
+	public Service MaintainTestConfigurationResult;
+	
+	public Service SearchTestConfigurationResult;
+
+	public Service ProduceTestResult;
+
+	public Service ProduceTrace;
+	
+	public Service JiraService;
+
+}

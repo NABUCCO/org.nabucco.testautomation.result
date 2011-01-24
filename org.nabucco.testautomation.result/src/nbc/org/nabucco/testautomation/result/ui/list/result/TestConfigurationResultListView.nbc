@@ -1,0 +1,23 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.ui.list.result;
+
+import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-10-12
+@Description	ListView for Test Configuration Result
+@Id				org.nabucco.testautomation.result.ui.list.result.TestConfigurationResultListView
+public ListView TestConfigurationResultListView {
+
+	private Datatype TestConfigurationResult[1] testConfigurationResult;
+	
+	@MappedField 			testConfigurationResult.name
+	@ColumnLabelId			testConfigurationResult.name 
+	@ColumnLabelDefault 	"Result Name"
+	private Column testConfigurationResultName;
+	 
+}

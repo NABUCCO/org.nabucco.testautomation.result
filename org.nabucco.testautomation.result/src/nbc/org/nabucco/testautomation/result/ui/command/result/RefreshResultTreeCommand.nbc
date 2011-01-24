@@ -1,0 +1,17 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.ui.command.result;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-10-14
+@Description	This command should refresh the tree in the master details view of result.
+@Id				org.nabucco.testautomation.result.ui.command.result.RefreshResultTreeCommand
+public Command RefreshResultTreeCommand {
+
+	@ManualImplementation
+	public void refreshResultTree();
+
+}

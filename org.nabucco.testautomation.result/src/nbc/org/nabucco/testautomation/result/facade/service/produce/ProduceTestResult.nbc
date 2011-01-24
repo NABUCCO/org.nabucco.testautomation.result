@@ -1,0 +1,20 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.service.produce;
+
+import org.nabucco.framework.base.facade.exception.service.ProduceException;
+import org.nabucco.testautomation.result.facade.message.TestResultMsg;
+
+@Author				Steffen Schmidt
+@Company			PRODYNA AG
+@Date				2010-10-05
+@Version			1.0
+@Description		TestResult produce service
+public Service ProduceTestResult {
+	
+	@ManualImplementation
+	public TestResultMsg produceTestResult() throws ProduceException;
+	
+}

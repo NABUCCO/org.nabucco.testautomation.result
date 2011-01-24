@@ -1,0 +1,61 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype;
+
+import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
+import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.Key;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.framework.base.facade.datatype.Duration;
+import org.nabucco.framework.base.facade.datatype.code.Code;
+import org.nabucco.testautomation.facade.datatype.base.Text;
+import org.nabucco.framework.base.facade.datatype.Flag;
+import org.nabucco.testautomation.facade.datatype.base.HierarchyLevelType;
+import org.nabucco.testautomation.facade.datatype.base.DateValue;
+import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
+import org.nabucco.testautomation.result.facade.datatype.status.TestConfigElementStatusType;
+import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	A basic TestResult
+public Datatype TestResult extends NabuccoDatatype {
+
+	private Enumeration HierarchyLevelType[1] level;
+	
+	private Enumeration TestConfigElementStatusType[1] status;
+	
+	@CodePath nabucco.testautomation.brand
+	private Datatype Code[0..1] brandType;
+
+	private Basetype Name[1] name;
+	
+	@MaxLength 16
+	private Basetype Key[0..1] testConfigElementKey;
+	
+	private Basetype Name[1] testConfigElementName;
+
+	private Basetype Identifier[1] testConfigElementId;
+	
+	private Basetype Identifier[1] schemaElementId;
+	
+	private Basetype DateValue[1] startTime;
+	
+	private Basetype DateValue[1] endTime;
+	
+	private Basetype Duration[1] duration;
+
+	private Basetype Text[0..1] message;
+
+	private Basetype Text[0..1] errorMessage;
+	
+	private Basetype Flag[1] jiraExport;
+
+	private Datatype TestResultContainer[0..*] testResultList;
+
+	private Datatype TestScriptResult[0..*] testScriptResultList;
+
+}

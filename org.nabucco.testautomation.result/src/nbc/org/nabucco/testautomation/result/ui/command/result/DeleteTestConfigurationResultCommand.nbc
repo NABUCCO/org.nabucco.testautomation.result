@@ -1,0 +1,17 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.ui.command.result;
+
+@Author			Marco Sussek
+@Company		PRODYNA AG
+@Date			2010-12-07
+@Description	This command should delete a TestConfigurationResult
+@Id				org.nabucco.testautomation.result.ui.command.result.DeleteTestConfigurationResultCommand
+public Command DeleteTestConfigurationResultCommand {
+
+	@ManualImplementation
+	public void deleteTestConfigurationResult();
+
+}

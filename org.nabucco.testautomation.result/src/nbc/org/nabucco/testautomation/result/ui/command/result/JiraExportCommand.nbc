@@ -1,0 +1,17 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.ui.command.result;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-29-12
+@Description	This command should create a JIRA Tasks for selected TestResult
+@Id				org.nabucco.testautomation.result.ui.command.result.JiraExportCommand
+public Command JiraExportCommand {
+
+	@ManualImplementation
+	public void jiraExport();
+
+}

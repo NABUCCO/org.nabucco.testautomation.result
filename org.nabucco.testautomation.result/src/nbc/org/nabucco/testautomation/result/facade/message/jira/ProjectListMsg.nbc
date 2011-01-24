@@ -1,0 +1,18 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.facade.message.jira;
+
+import org.nabucco.framework.base.facade.datatype.issuetracking.Project;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-01-05
+@Version		1.0
+@Description	Message for transporting a list of Projects
+public Message ProjectListMsg {
+
+	private Datatype Project[0..*] projects;
+
+}

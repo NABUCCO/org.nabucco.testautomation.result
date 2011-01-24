@@ -1,0 +1,24 @@
+/*
+ *  PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype;
+
+import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
+import org.nabucco.framework.base.facade.datatype.Order;
+import org.nabucco.testautomation.result.facade.datatype.TestResult;
+
+@Author         sschmidt
+@Company        PRODYNA AG
+@Date           2010-10-05
+@Version        1.0
+@Description    Container holding a TestResult and its order position
+public Datatype TestResultContainer extends NabuccoDatatype {
+
+	@FetchStrategy			EAGER
+	@AssociationStrategy	AGGREGATION
+	private Datatype TestResult[1] result;
+	
+	private Basetype Order[0..1] orderIndex;
+
+}

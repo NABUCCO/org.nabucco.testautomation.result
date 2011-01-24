@@ -1,0 +1,27 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype;
+
+import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.testautomation.facade.datatype.base.Text;
+import org.nabucco.testautomation.result.facade.datatype.status.TestScriptElementStatusType;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	The result of a TestScriptElement
+public Datatype TestScriptElementResult extends NabuccoDatatype {
+
+	@Default NOT_EXECUTED
+	private Enumeration TestScriptElementStatusType[1] elementStatus;
+
+	private Basetype Identifier[1] elementId;
+	
+	private Basetype Text[0..1] message;
+
+	private Basetype Text[0..1] errorMessage;
+	
+}

@@ -1,0 +1,43 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype;
+
+import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.Key;
+import org.nabucco.framework.base.facade.datatype.Duration;
+import org.nabucco.framework.base.facade.datatype.log.LogTrace;
+import org.nabucco.testautomation.facade.datatype.base.DateValue;
+import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
+import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
+import org.nabucco.testautomation.result.facade.datatype.status.TestScriptStatusType;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	The result of a TestScript
+public Datatype TestScriptResult extends TestScriptElementResult {
+
+	@Default PASSED
+	private Enumeration TestScriptStatusType[1] status;
+	
+	@MaxLength 16
+	private Basetype Key[0..1] testScriptKey;
+
+	private Basetype Name[1] testScriptName;
+	
+	private Basetype DateValue[1] startTime;
+	
+	private Basetype DateValue[1] endTime;
+
+	private Basetype Duration[1] duration;
+	
+	private transient Datatype TestScriptElementResult[0..*] elementResultList;
+	
+	private Datatype ActionTrace[0..*] actionTraceList;
+	
+	@MaxLength 100000
+	private Basetype LogTrace[0..1] logging;
+	
+}

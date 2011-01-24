@@ -1,0 +1,28 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.facade.message;
+
+import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.framework.base.facade.datatype.DateTime;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-10-05
+@Version		1.0
+@Description	Message for searching TestConfigurationResults
+public Message TestConfigurationResultSearchMsg {
+
+	private Basetype Identifier[1] id;
+
+	private Basetype Name[1] name;
+
+	private Basetype Name[1] testConfigurationName;
+
+	private Basetype Identifier[1] testConfigurationId;
+	
+	private Basetype DateTime[1] startTime;
+
+}

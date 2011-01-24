@@ -1,0 +1,42 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.service.jira;
+
+import org.nabucco.framework.base.facade.exception.service.MaintainException;
+import org.nabucco.framework.base.facade.exception.service.SearchException;
+
+import org.nabucco.testautomation.result.facade.message.jira.ProjectListMsg;
+import org.nabucco.testautomation.result.facade.message.jira.PriorityListMsg;
+import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
+import org.nabucco.testautomation.result.facade.message.jira.ComponentListMsg;
+import org.nabucco.testautomation.result.facade.message.jira.IssueMsg;
+import org.nabucco.testautomation.result.facade.message.jira.ProjectMsg;
+
+@Author				Markus Jorroch
+@Company			PRODYNA AG
+@Date				2011-01-05
+@Version			1.0
+@Description		Jira export service
+public Service JiraService {
+	
+	@ManualImplementation
+	public ProjectListMsg getProjects() throws SearchException;
+	
+	@ManualImplementation
+	public PriorityListMsg getPriorities() throws SearchException;
+
+	@ManualImplementation
+	public IssueTypeListMsg getIssueTypesOfProject(ProjectMsg msg) throws SearchException;
+	
+	@ManualImplementation
+	public ComponentListMsg getComponentsOfProject(ProjectMsg msg) throws SearchException;
+	
+	@ManualImplementation
+	public IssueMsg createIssue(IssueMsg msg) throws MaintainException;
+
+	@ManualImplementation
+	public IssueMsg createIssues(IssueMsg msg) throws MaintainException;
+	
+}

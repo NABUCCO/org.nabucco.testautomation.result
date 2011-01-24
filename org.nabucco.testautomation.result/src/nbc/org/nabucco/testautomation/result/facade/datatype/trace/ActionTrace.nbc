@@ -1,0 +1,33 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype.trace;
+
+import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.Duration;
+import org.nabucco.framework.base.facade.datatype.log.LogTrace;
+import org.nabucco.testautomation.facade.datatype.base.DateValue;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-10-10
+@Description	The tracing information for an external action call
+public Datatype ActionTrace extends NabuccoDatatype {
+
+	private Basetype Name[1] name;
+
+	private Basetype Identifier[1] actionId;
+
+	private Basetype DateValue[1] startTime;
+	
+	private Basetype DateValue[1] endTime;
+	
+	private Basetype Duration[1] duration;
+	
+	@MaxLength 100000
+	private Basetype LogTrace[0..1] stackTrace;
+	
+}

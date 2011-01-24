@@ -1,0 +1,22 @@
+/*
+ *  PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype.manual;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-11-30
+@Description	Enumeration to indicate the state of a manual result
+public Enumeration ManualState {
+
+    @LiteralId	"I"
+    INITIALIZED
+    
+    @LiteralId	"F"
+    FINISHED
+    
+    @LiteralId	"A"
+    ABORTED
+    
+}

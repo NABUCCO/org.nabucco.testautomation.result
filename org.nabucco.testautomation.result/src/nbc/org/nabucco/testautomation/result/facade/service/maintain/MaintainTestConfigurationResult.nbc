@@ -1,0 +1,23 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.service.maintain;
+
+import org.nabucco.framework.base.facade.exception.service.MaintainException;
+import org.nabucco.testautomation.result.facade.message.TestConfigurationResultMsg;
+
+@Author				Steffen Schmidt
+@Company			PRODYNA AG
+@Date				2010-10-05
+@Version			1.0
+@Description		TestConfigurationResult maintenance service
+public Service MaintainTestConfigurationResult {
+	
+	@Inject
+	private EntityManager[1] em;
+
+	@ManualImplementation
+	public TestConfigurationResultMsg maintainTestConfigurationResult(TestConfigurationResultMsg testConfigResultMsg) throws MaintainException;
+	
+}

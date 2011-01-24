@@ -1,0 +1,44 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype;
+
+import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
+import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.Duration;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.framework.base.facade.datatype.code.Code;
+import org.nabucco.testautomation.facade.datatype.base.DateValue;
+import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
+import org.nabucco.testautomation.result.facade.datatype.status.TestConfigurationStatusType;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	The result list of the execution of a TestConfiguration
+public Datatype TestConfigurationResult extends NabuccoDatatype {
+
+	private Enumeration TestConfigurationStatusType[1] status;
+
+	@CodePath nabucco.testautomation.environment
+	private Datatype Code[0..1] environmentType;
+
+	@CodePath nabucco.testautomation.release
+	private Datatype Code[0..1] releaseType;
+
+	private Basetype Name[1] name;
+	
+	private Basetype Name[1] testConfigurationName;
+
+	private Basetype Identifier[1] testConfigurationId;
+	
+	private Basetype DateValue[1] startTime;
+	
+	private Basetype DateValue[1] endTime;
+	
+	private Basetype Duration[1] duration;
+	
+	private Datatype TestResultContainer[0..*] testResultList;
+
+}

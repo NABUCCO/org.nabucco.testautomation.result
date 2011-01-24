@@ -1,0 +1,17 @@
+/*
+*  PRODYNA NABUCCO
+*  Copyright 2010, PRODYNA AG
+*/
+package org.nabucco.testautomation.result.ui.command.reporting;
+
+@Author			Markus Jorroch
+@Company		PRODYNA AG
+@Date			2010-11-16
+@Description	This command should open the reporting view.
+@Id				org.nabucco.testautomation.result.ui.command.reporting.OpenReportEditViewCommand
+public Command OpenReportEditViewCommand {
+
+	@ManualImplementation
+	public void openReportEditView();
+
+}

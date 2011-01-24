@@ -1,0 +1,28 @@
+/*
+ *  PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype.status;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	Enumeration to indicate the status of the execution of a TestConfiguration
+public Enumeration TestConfigurationStatusType {
+
+    @LiteralId	"I"
+    INITIALIZED
+    
+    @LiteralId	"R"
+    RUNNING
+    
+    @LiteralId	"F"
+    FINISHED
+    
+    @LiteralId	"C"
+    CANCELLED
+    
+    @LiteralId	"W"
+    WAITING
+    
+}

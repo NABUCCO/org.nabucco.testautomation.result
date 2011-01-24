@@ -1,0 +1,19 @@
+/*
+ *  PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype.status;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-06-01
+@Description	Enumeration to indicate the status of TestScriptElement
+public Enumeration TestScriptElementStatusType {
+
+    @LiteralId	"E"
+    EXECUTED
+    
+    @LiteralId	"N"
+    NOT_EXECUTED
+
+}

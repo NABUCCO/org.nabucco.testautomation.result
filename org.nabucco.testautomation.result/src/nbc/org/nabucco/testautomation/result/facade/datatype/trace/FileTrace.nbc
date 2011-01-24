@@ -1,0 +1,21 @@
+/*
+ *	PRODYNA NABUCCO
+ *  Copyright 2010, PRODYNA AG
+ */
+package org.nabucco.testautomation.result.facade.datatype.trace;
+
+import org.nabucco.framework.base.facade.datatype.Data;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
+
+@Author			Steffen Schmidt
+@Company		PRODYNA AG
+@Date			2010-12-06
+@Description	The tracing information containing a binary file
+public Datatype FileTrace extends ActionTrace {
+
+	private Basetype Data[0..1] fileContent;
+
+	private transient Basetype Identifier[0..1] fileId;
+
+}
