@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.nabucco.framework.base.facade.datatype.Datatype;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.utils.I18N;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.detail.widget.BaseTypeWidgetFactory;
 import org.nabucco.framework.plugin.base.layout.ImageProvider;
@@ -71,11 +72,13 @@ TestautomationDetailPageViewLayouter {
 	@Override
 	protected Control layoutElement(Composite parent,
 			BaseTypeWidgetFactory widgetFactory, Datatype datatype,
-			String masterBlockId, Object property, String propertyName,
+			String masterBlockId, NabuccoProperty property,
 			GridData data, boolean readOnly, ViewModel externalViewModel,
 			NabuccoMessageManager messageManager) {
 
 		// Validate property screenshot
+		String propertyName = property.getName();
+		
 		if (propertyName.equalsIgnoreCase(PROPERTY_SCREENSHOT)) {
 			// Create Label
 			Label label = widgetFactory.createLabel(parent, masterBlockId + "."
@@ -89,7 +92,7 @@ TestautomationDetailPageViewLayouter {
 					.createImage(ResultImageRegistry.ICON_SCREENSHOT.getId()));
 			button.setToolTipText(I18N.i18n(masterBlockId + "." + BUTTON));
 			button.addSelectionListener(new OpenScreenshotListener(
-					(ScreenshotTrace) datatype));
+					(ScreenshotTrace) datatype, true));
 
 			// Format button right
 			data = new GridData();
@@ -99,7 +102,7 @@ TestautomationDetailPageViewLayouter {
 			return button;
 		} else {
 			return super.layoutElement(parent, widgetFactory, datatype,
-					masterBlockId, property, propertyName, data, readOnly,
+					masterBlockId, property, data, readOnly,
 					externalViewModel, messageManager);
 		}
 	}

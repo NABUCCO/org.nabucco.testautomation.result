@@ -1,3 +1,19 @@
+/*
+* Copyright 2010 PRODYNA AG
+*
+* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.opensource.org/licenses/eclipse-1.0.php or
+* http://www.nabucco-source.org/nabucco-license.html
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard;
 
 import java.util.ArrayList;
@@ -8,21 +24,26 @@ import org.nabucco.framework.base.facade.datatype.issuetracking.IssueType;
 import org.nabucco.framework.base.facade.datatype.issuetracking.Priority;
 import org.nabucco.framework.base.facade.datatype.issuetracking.Project;
 import org.nabucco.framework.base.facade.datatype.issuetracking.ProjectComponent;
+import org.nabucco.framework.base.facade.datatype.issuetracking.Version;
 import org.nabucco.framework.base.facade.exception.client.ClientException;
 import org.nabucco.framework.base.facade.message.EmptyServiceMessage;
 import org.nabucco.framework.plugin.base.Activator;
-import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.message.jira.ComponentListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.IssueMsg;
 import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.PriorityListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectMsg;
+import org.nabucco.testautomation.result.facade.message.jira.VersionListMsg;
 import org.nabucco.testautomation.result.ui.rcp.communication.ResultComponentServiceDelegateFactory;
 import org.nabucco.testautomation.result.ui.rcp.communication.jira.JiraServiceDelegate;
-import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.multi.CollectiveJiraExportWizardModel;
-import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.single.SingleJiraExportWizardModel;
 
+
+/**
+ * JiraAdapterConnector
+ * 
+ * @author Markus Jorroch, PRODYNA AG
+ */
 public class JiraAdapterConnector {
 
 	private static ResultComponentServiceDelegateFactory resultComponentServiceDelegateFactory = ResultComponentServiceDelegateFactory.getInstance();
@@ -74,6 +95,22 @@ public class JiraAdapterConnector {
 		return new ArrayList<ProjectComponent>();
 	}
 
+	public List<Version> getVersionsForProject(Project project) {
+		try {
+			JiraServiceDelegate jiraService = resultComponentServiceDelegateFactory.getJiraService();
+			
+			ProjectMsg rq = new ProjectMsg();
+			rq.setProject(project);
+			VersionListMsg rs = jiraService.getVersionsOfProject(rq);
+			List<Version> versions = rs.getVersions();
+			
+			return versions;
+		} catch (ClientException e) {
+			Activator.getDefault().logError(e);
+		}
+		return new ArrayList<Version>();
+	}
+
 	public List<Priority> getPriorities() {
 		try {
 			JiraServiceDelegate jiraService = resultComponentServiceDelegateFactory.getJiraService();
@@ -88,27 +125,29 @@ public class JiraAdapterConnector {
 		return new ArrayList<Priority>();
 	}
 
+	public boolean createIssue(JiraExportWizardModel jiraExportWizardModel) {
 
-	public boolean createIssue(CollectiveJiraExportWizardModel collectiveJiraExportWizardModel) {
 		Issue issue = new Issue();
-		issue.setComponent(collectiveJiraExportWizardModel.getComponent());
-		issue.setDescription(collectiveJiraExportWizardModel.getDescription());
-		if(collectiveJiraExportWizardModel.getDueDate() != null){
-			issue.setDueDate(collectiveJiraExportWizardModel.getDueDate().getTime());
+		issue.getComponents().addAll(jiraExportWizardModel.getSelectedComponents());
+		issue.getAffectedVersions().addAll(jiraExportWizardModel.getSelectedVersions());
+		issue.setDescription(jiraExportWizardModel.getDescription());
+		issue.setPriority(jiraExportWizardModel.getPriority());
+		issue.setProject(jiraExportWizardModel.getProject());
+		issue.setSummary(jiraExportWizardModel.getSummary());
+		issue.setIssueType(jiraExportWizardModel.getIssueType());
+		
+		if(jiraExportWizardModel.getDueDate() != null){
+			issue.setDueDate(jiraExportWizardModel.getDueDate().getTime());
 		}
-		issue.setPriority(collectiveJiraExportWizardModel.getPriority());
-		issue.setProject(collectiveJiraExportWizardModel.getProject());
-		issue.setSummary(collectiveJiraExportWizardModel.getSummary());
-		issue.setIssueType(collectiveJiraExportWizardModel.getIssueType());
 		
 		try {
 			JiraServiceDelegate jiraService = resultComponentServiceDelegateFactory.getJiraService();
 
 			IssueMsg rq = new IssueMsg();
 			rq.setIssue(issue);
-			rq.setEnvironmentType(collectiveJiraExportWizardModel.getTestConfigurationResult().getEnvironmentType());
-			rq.setReleaseType(collectiveJiraExportWizardModel.getTestConfigurationResult().getReleaseType());
-			rq.getTestResults().addAll(collectiveJiraExportWizardModel.getSelectedTestResults());
+			rq.setEnvironmentType(jiraExportWizardModel.getTestConfigurationResult().getEnvironmentType());
+			rq.setReleaseType(jiraExportWizardModel.getTestConfigurationResult().getReleaseType());
+			rq.getTestResults().addAll(jiraExportWizardModel.getSelectedTestResults());
 			jiraService.createIssues(rq);
 			
 			return true;
@@ -119,37 +158,4 @@ public class JiraAdapterConnector {
 		
 	}
 	
-	public boolean createIssue(SingleJiraExportWizardModel singleJiraExportWizardModel) {
-		Issue issue = new Issue();
-		issue.setComponent(singleJiraExportWizardModel.getComponent());
-		issue.setDescription(singleJiraExportWizardModel.getDescription());
-		if(singleJiraExportWizardModel.getDueDate() != null){
-			issue.setDueDate(singleJiraExportWizardModel.getDueDate().getTime());
-		}
-		issue.setPriority(singleJiraExportWizardModel.getPriority());
-		issue.setProject(singleJiraExportWizardModel.getProject());
-		issue.setSummary(singleJiraExportWizardModel.getSummary());
-		issue.setIssueType(singleJiraExportWizardModel.getIssueType());
-		
-		ArrayList<TestResult> testResults = new ArrayList<TestResult>();
-		testResults.add(singleJiraExportWizardModel.getSelectedTestResult());
-		
-		try {
-			JiraServiceDelegate jiraService = resultComponentServiceDelegateFactory.getJiraService();
-
-			IssueMsg rq = new IssueMsg();
-			rq.setIssue(issue);
-			rq.setEnvironmentType(singleJiraExportWizardModel.getTestConfigurationResult().getEnvironmentType());
-			rq.setReleaseType(singleJiraExportWizardModel.getTestConfigurationResult().getReleaseType());
-			rq.getTestResults().addAll(testResults);
-			jiraService.createIssue(rq);
-			
-			return true;
-		} catch (ClientException e) {
-			Activator.getDefault().logError(e);
-		}
-		return false;
-		
-	}
-
 }

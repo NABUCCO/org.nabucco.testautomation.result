@@ -1,3 +1,19 @@
+/*
+ * Copyright 2010 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco-source.org/nabucco-license.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.impl.service.jira;
 
 import java.util.List;
@@ -18,11 +34,21 @@ import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
 import org.nabucco.testautomation.result.facade.message.jira.IssueMsg;
 
+/**
+ * JiraSupport
+ * 
+ * @author Markus Jorroch, PRODYNA AG
+ */
 public class JiraSupport {
 
+	private static final String NEW_LINE = "\n";
+
+	private static final String SPACE = " ";
 
 	private static final String SCREENSHOT_NAME_PREFIX = "Screenshot ";
+	
 	private static final String FILE_NAME_PREFIX = "Attachment ";
+	
 	private static final String SCREENSHOT_NAME_SUFFIX = ".png";
 
 	public static synchronized void buildSummary(Issue clonedIssue, TestResult testResult) {
@@ -30,7 +56,7 @@ public class JiraSupport {
 		if(summary == null || summary.getValue() == null || summary.getValue().length() == 0){
 			clonedIssue.setSummary(testResult.getName().getValue());
 		} else {
-			clonedIssue.setSummary(summary.getValue() + " " + testResult.getName().getValue());
+			clonedIssue.setSummary(summary.getValue() + SPACE + testResult.getName().getValue());
 		}
 	}
 
@@ -44,35 +70,36 @@ public class JiraSupport {
 				// Description
 				StringBuilder builder = new StringBuilder();
 				if(testResult.getTestConfigElementKey() != null){
-					builder.append("Test Configuration Element Key:").append(" ").append(testResult.getTestConfigElementKey().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Key:").append(SPACE).append(testResult.getTestConfigElementKey().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getTestConfigElementName() != null){
-					builder.append("Test Configuration Element Name:").append(" ").append(testResult.getTestConfigElementName().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Name:").append(SPACE).append(testResult.getTestConfigElementName().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getEnvironmentType() != null){
-					builder.append("Environment:").append(" ").append(msg.getEnvironmentType().getName());
-					builder.append("\n");
+					builder.append("Environment:").append(SPACE).append(msg.getEnvironmentType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getReleaseType() != null){
-					builder.append("Release:").append(" ").append(msg.getReleaseType().getName());
-					builder.append("\n");
+					builder.append("Release:").append(SPACE).append(msg.getReleaseType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getBrandType() != null){
-					builder.append("Brand:").append(" ").append(testResult.getBrandType().getName());
-					builder.append("\n");
+					builder.append("Brand:").append(SPACE).append(testResult.getBrandType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStartTime() != null){
-					builder.append("StartTime:").append(" ").append(testResult.getStartTime().getValue().toString());
-					builder.append("\n");
+					builder.append("StartTime:").append(SPACE).append(testResult.getStartTime().getValue().toString());
+					builder.append(NEW_LINE);
 				}
 				if(manualTestResult.getState() != null){
-					builder.append("State:").append(" ").append(manualTestResult.getState().name());
-					builder.append("\n\n");
+					builder.append("State:").append(SPACE).append(manualTestResult.getState().name());
+					builder.append(NEW_LINE);
+					builder.append(NEW_LINE);
 				}
 				if(manualTestResult.getUserErrorMessage() != null){
-					builder.append("User Error Message:").append("\n").append(manualTestResult.getUserErrorMessage());
+					builder.append("User Error Message:").append(NEW_LINE).append(manualTestResult.getUserErrorMessage());
 				}
 
 				// Append erroneous TestScriptResults
@@ -82,41 +109,42 @@ public class JiraSupport {
 				if(description == null || description.getValue() == null || description.getValue().length() == 0){
 					clonedIssue.setDescription(builder.toString());
 				} else {
-					clonedIssue.setDescription(description.getValue() + "\n\n" + builder.toString());
+					clonedIssue.setDescription(description.getValue() + NEW_LINE + NEW_LINE + builder.toString());
 				}
 			} else {
 				// Description
 				StringBuilder builder = new StringBuilder();
 				if(testResult.getTestConfigElementKey() != null){
-					builder.append("Test Configuration Element Key:").append(" ").append(testResult.getTestConfigElementKey().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Key:").append(SPACE).append(testResult.getTestConfigElementKey().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getTestConfigElementName() != null){
-					builder.append("Test Configuration Element Name:").append(" ").append(testResult.getTestConfigElementName().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Name:").append(SPACE).append(testResult.getTestConfigElementName().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getEnvironmentType() != null){
-					builder.append("EnvironmentType:").append(" ").append(msg.getEnvironmentType().getName());
-					builder.append("\n");
+					builder.append("EnvironmentType:").append(SPACE).append(msg.getEnvironmentType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getReleaseType() != null){
-					builder.append("ReleaseType:").append(" ").append(msg.getReleaseType().getName());
-					builder.append("\n");
+					builder.append("ReleaseType:").append(SPACE).append(msg.getReleaseType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getBrandType() != null){
-					builder.append("BrandType:").append(" ").append(testResult.getBrandType().getName());
-					builder.append("\n");
+					builder.append("BrandType:").append(SPACE).append(testResult.getBrandType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStartTime() != null){
-					builder.append("StartTime:").append(" ").append(testResult.getStartTime().getValue().toString());
-					builder.append("\n");
+					builder.append("StartTime:").append(SPACE).append(testResult.getStartTime().getValue().toString());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStatus() != null){
-					builder.append("Status:").append(" ").append(testResult.getStatus().name());
-					builder.append("\n\n");
+					builder.append("Status:").append(SPACE).append(testResult.getStatus().name());
+					builder.append(NEW_LINE);
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getErrorMessage() != null){
-					builder.append("ErrorMessage:").append("\n").append(testResult.getErrorMessage());
+					builder.append("ErrorMessage:").append(NEW_LINE).append(testResult.getErrorMessage());
 				}
 
 				// Append erroneous TestScriptResults
@@ -126,7 +154,7 @@ public class JiraSupport {
 				if(description == null || description.getValue() == null || description.getValue().length() == 0){
 					clonedIssue.setDescription(builder.toString());
 				} else {
-					clonedIssue.setDescription(description.getValue() + "\n\n" + builder.toString());
+					clonedIssue.setDescription(description.getValue() + NEW_LINE + NEW_LINE + builder.toString());
 				}
 			}
 
@@ -141,82 +169,84 @@ public class JiraSupport {
 				// Description
 				StringBuilder builder = new StringBuilder();
 				if(testResult.getTestConfigElementKey() != null){
-					builder.append("Test Configuration Element Key:").append(" ").append(testResult.getTestConfigElementKey().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Key:").append(SPACE).append(testResult.getTestConfigElementKey().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getTestConfigElementName() != null){
-					builder.append("Test Configuration Element Name:").append(" ").append(testResult.getTestConfigElementName().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Name:").append(SPACE).append(testResult.getTestConfigElementName().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getEnvironmentType() != null){
-					builder.append("Environment:").append(" ").append(msg.getEnvironmentType().getName());
-					builder.append("\n");
+					builder.append("Environment:").append(SPACE).append(msg.getEnvironmentType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getReleaseType() != null){
-					builder.append("Release:").append(" ").append(msg.getReleaseType().getName());
-					builder.append("\n");
+					builder.append("Release:").append(SPACE).append(msg.getReleaseType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getBrandType() != null){
-					builder.append("Brand:").append(" ").append(testResult.getBrandType().getName());
-					builder.append("\n");
+					builder.append("Brand:").append(SPACE).append(testResult.getBrandType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStartTime() != null){
-					builder.append("Start Time:").append(" ").append(testResult.getStartTime().getValue().toString());
-					builder.append("\n");
+					builder.append("Start Time:").append(SPACE).append(testResult.getStartTime().getValue().toString());
+					builder.append(NEW_LINE);
 				}
 				if(manualTestResult.getState() != null){
-					builder.append("State:").append(" ").append(manualTestResult.getState().name());
-					builder.append("\n\n");
+					builder.append("State:").append(SPACE).append(manualTestResult.getState().name());
+					builder.append(NEW_LINE);
+					builder.append(NEW_LINE);
 				}
 				if(manualTestResult.getUserMessage() != null){
-					builder.append("User Message:").append("\n").append(manualTestResult.getUserMessage());
+					builder.append("User Message:").append(NEW_LINE).append(manualTestResult.getUserMessage());
 				}
 
 				Documentation description = clonedIssue.getDescription();
 				if(description == null || description.getValue() == null || description.getValue().length() == 0){
 					clonedIssue.setDescription(builder.toString());
 				} else {
-					clonedIssue.setDescription(description.getValue() + "\n\n" + builder.toString());
+					clonedIssue.setDescription(description.getValue() + NEW_LINE + NEW_LINE + builder.toString());
 				}
 			} else {
 				// Description
 				StringBuilder builder = new StringBuilder();
 				if(testResult.getTestConfigElementKey() != null){
-					builder.append("Test Configuration Element Key:").append(" ").append(testResult.getTestConfigElementKey().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Key:").append(SPACE).append(testResult.getTestConfigElementKey().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getTestConfigElementName() != null){
-					builder.append("Test Configuration Element Name:").append(" ").append(testResult.getTestConfigElementName().getValue());
-					builder.append("\n");
+					builder.append("Test Configuration Element Name:").append(SPACE).append(testResult.getTestConfigElementName().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getEnvironmentType() != null){
-					builder.append("Environment:").append(" ").append(msg.getEnvironmentType().getName());
-					builder.append("\n");
+					builder.append("Environment:").append(SPACE).append(msg.getEnvironmentType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(msg.getReleaseType() != null){
-					builder.append("Release:").append(" ").append(msg.getReleaseType().getName());
-					builder.append("\n");
+					builder.append("Release:").append(SPACE).append(msg.getReleaseType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getBrandType() != null){
-					builder.append("Brand:").append(" ").append(testResult.getBrandType().getName());
-					builder.append("\n");
+					builder.append("Brand:").append(SPACE).append(testResult.getBrandType().getName());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStartTime() != null){
-					builder.append("Start Time:").append(" ").append(testResult.getStartTime().getValue().toString());
-					builder.append("\n");
+					builder.append("Start Time:").append(SPACE).append(testResult.getStartTime().getValue().toString());
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getStatus() != null){
-					builder.append("Status:").append(" ").append(testResult.getStatus().name());
-					builder.append("\n\n");
+					builder.append("Status:").append(SPACE).append(testResult.getStatus().name());
+					builder.append(NEW_LINE);
+					builder.append(NEW_LINE);
 				}
 				if(testResult.getMessage() != null){
-					builder.append("Message:").append("\n").append(testResult.getMessage());
+					builder.append("Message:").append(NEW_LINE).append(testResult.getMessage());
 				}
 				Documentation description = clonedIssue.getDescription();
 				if(description == null || description.getValue() == null || description.getValue().length() == 0){
 					clonedIssue.setDescription(builder.toString());
 				} else {
-					clonedIssue.setDescription(description.getValue() + "\n\n" + builder.toString());
+					clonedIssue.setDescription(description.getValue() + NEW_LINE + NEW_LINE + builder.toString());
 				}
 			}
 		}
@@ -232,23 +262,23 @@ public class JiraSupport {
 				builder.append("\n-----------------------------\n\n");
 
 				if(testScriptResult.getTestScriptKey() != null){
-					builder.append("Test Script Key:").append(" ").append(testScriptResult.getTestScriptKey().getValue());
-					builder.append("\n");
+					builder.append("Test Script Key:").append(SPACE).append(testScriptResult.getTestScriptKey().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testScriptResult.getTestScriptName() != null){
-					builder.append("Test Script Name:").append(" ").append(testScriptResult.getTestScriptName().getValue());
-					builder.append("\n");
+					builder.append("Test Script Name:").append(SPACE).append(testScriptResult.getTestScriptName().getValue());
+					builder.append(NEW_LINE);
 				}
 				if(testScriptResult.getStatus() != null){
-					builder.append("Status:").append(" ").append(testScriptResult.getStatus().name());
-					builder.append("\n");
+					builder.append("Status:").append(SPACE).append(testScriptResult.getStatus().name());
+					builder.append(NEW_LINE);
 				}
 				if(testScriptResult.getStartTime() != null){
-					builder.append("Start Time:").append(" ").append(testScriptResult.getStartTime().getValue());
-					builder.append("\n");
+					builder.append("Start Time:").append(SPACE).append(testScriptResult.getStartTime().getValue());
+					builder.append(NEW_LINE);
 				}				
 				if(testScriptResult.getErrorMessage() != null){
-					builder.append("Error Message:").append("\n").append(testScriptResult.getErrorMessage());
+					builder.append("Error Message:").append(NEW_LINE).append(testScriptResult.getErrorMessage());
 				}
 
 				List<ActionTrace> actionTraceList = testScriptResult.getActionTraceList();
@@ -259,15 +289,15 @@ public class JiraSupport {
 						builder.append("\n\t-----------------------------\n\n");
 						MessageTrace messageTrace = (MessageTrace) actionTrace;
 						if(messageTrace.getName() != null){
-							builder.append("Name:").append(" ").append(messageTrace.getName().getValue());
-							builder.append("\n");
+							builder.append("Name:").append(SPACE).append(messageTrace.getName().getValue());
+							builder.append(NEW_LINE);
 						}
 						if(messageTrace.getRequest() != null){
-							builder.append("Request:").append(" ").append(messageTrace.getRequest().getValue());
-							builder.append("\n");
+							builder.append("Request:").append(SPACE).append(messageTrace.getRequest().getValue());
+							builder.append(NEW_LINE);
 						}
 						if(messageTrace.getResponse() != null){
-							builder.append("Response:").append(" ").append(messageTrace.getResponse().getValue());
+							builder.append("Response:").append(SPACE).append(messageTrace.getResponse().getValue());
 						}
 					}
 				}

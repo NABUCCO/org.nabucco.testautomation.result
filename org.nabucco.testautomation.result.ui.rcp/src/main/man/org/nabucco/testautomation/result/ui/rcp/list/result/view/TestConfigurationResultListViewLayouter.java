@@ -33,13 +33,20 @@ import org.nabucco.framework.plugin.base.view.NabuccoFormToolkit;
 import org.nabucco.framework.plugin.base.view.NabuccoMessageManager;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.ui.rcp.list.result.model.TestConfigurationResultListViewModel;
-import org.nabucco.testautomation.result.ui.rcp.list.result.view.TestConfigurationResultListViewTableFilter;
-import org.nabucco.testautomation.result.ui.rcp.list.result.view.TestConfigurationResultListViewWidgetFactory;
+import org.nabucco.testautomation.result.ui.rcp.list.result.view.comparator.TestConfigurationResultListViewOwnerComparator;
 import org.nabucco.testautomation.result.ui.rcp.list.result.view.comparator.TestConfigurationResultListViewTestConfigurationResultNameComparator;
+import org.nabucco.testautomation.result.ui.rcp.list.result.view.label.TestConfigurationResultListViewOwnerLabelProvider;
+import org.nabucco.testautomation.result.ui.rcp.list.result.view.label.TestConfigurationResultListViewTestConfigurationResultKeyLabelProvider;
 import org.nabucco.testautomation.result.ui.rcp.list.result.view.label.TestConfigurationResultListViewTestConfigurationResultNameLabelProvider;
 
 
 public class TestConfigurationResultListViewLayouter extends NabuccoAbstractListLayouter<TestConfigurationResultListViewModel> {
+
+	private static final String OWNER_COLUMN_KEY = "org.nabucco.testautomation.result.ui.rcp.list.result.view.owner";
+	
+	private static final String NAME_COLUMN_KEY = "org.nabucco.testautomation.result.ui.rcp.list.result.view.name";
+	
+	private static final String KEY_COLUMN_KEY = "org.nabucco.testautomation.result.ui.rcp.list.result.view.key";
 
 	/**
 	 * Layouts the table
@@ -68,7 +75,8 @@ public class TestConfigurationResultListViewLayouter extends NabuccoAbstractList
 	private List<Comparator<TestConfigurationResult>> createComparators() {
 		List<Comparator<TestConfigurationResult>> comparators = new ArrayList<Comparator<TestConfigurationResult>>();
 		comparators.add(new TestConfigurationResultListViewTestConfigurationResultNameComparator());
-
+		comparators.add(new  TestConfigurationResultListViewOwnerComparator());
+		
 		return comparators;
 	}
 
@@ -79,10 +87,18 @@ public class TestConfigurationResultListViewLayouter extends NabuccoAbstractList
 	 */
 	private NabuccoTableColumnInfo[] createTableColumnInfo() {
 		NabuccoTableColumnInfo[] result = {
-				new NabuccoTableColumnInfo("name",
-						"This is a TestConfig name.", 200, SWT.CENTER,
+				new NabuccoTableColumnInfo(KEY_COLUMN_KEY,
+						KEY_COLUMN_KEY, 200, SWT.LEFT,
 						SWT.CENTER,
-						new TestConfigurationResultListViewTestConfigurationResultNameLabelProvider())};
+						new TestConfigurationResultListViewTestConfigurationResultKeyLabelProvider()),
+				new NabuccoTableColumnInfo(NAME_COLUMN_KEY,
+						NAME_COLUMN_KEY, 600, SWT.LEFT,
+						SWT.CENTER,
+						new TestConfigurationResultListViewTestConfigurationResultNameLabelProvider()),
+                new NabuccoTableColumnInfo(OWNER_COLUMN_KEY,
+                		OWNER_COLUMN_KEY, 200,
+                        SWT.LEFT, SWT.LEFT,
+                        new TestConfigurationResultListViewOwnerLabelProvider())};
 		return result;
 	}
 

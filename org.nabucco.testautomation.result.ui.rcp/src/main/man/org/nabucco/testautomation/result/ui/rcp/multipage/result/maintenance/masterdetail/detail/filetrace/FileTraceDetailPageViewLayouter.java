@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.nabucco.framework.base.facade.datatype.Data;
 import org.nabucco.framework.base.facade.datatype.Datatype;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.utils.I18N;
 import org.nabucco.framework.plugin.base.Activator;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.detail.widget.BaseTypeWidgetFactory;
@@ -80,11 +81,13 @@ TestautomationDetailPageViewLayouter {
 	@Override
 	protected Control layoutElement(Composite parent,
 			BaseTypeWidgetFactory widgetFactory, Datatype datatype,
-			String masterBlockId, Object property, String propertyName,
+			String masterBlockId, NabuccoProperty property,
 			GridData data, boolean readOnly, ViewModel externalViewModel,
 			NabuccoMessageManager messageManager) {
 
 		// Validate property fileContent
+		String propertyName = property.getName();
+		
 		if (propertyName.equalsIgnoreCase(PROPERTY_FILE_CONTENT)) {
 
 			final FileTrace fileTrace = (FileTrace) datatype;
@@ -153,7 +156,7 @@ TestautomationDetailPageViewLayouter {
 			return button;
 		} else {
 			return super.layoutElement(parent, widgetFactory, datatype,
-					masterBlockId, property, propertyName, data, readOnly,
+					masterBlockId, property, data, readOnly,
 					externalViewModel, messageManager);
 		}
 	}

@@ -35,6 +35,7 @@ import org.nabucco.framework.base.facade.datatype.utils.I18N;
 import org.nabucco.framework.plugin.base.Activator;
 import org.nabucco.framework.plugin.base.component.list.view.NabuccoTableColumnInfo;
 import org.nabucco.framework.plugin.base.component.list.view.NabuccoTableSorter;
+import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailHelper;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailTreeNode;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailTreeNodeCreatorForAllDatatypes;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.addDialog.AddDialogLabelProvider;
@@ -85,8 +86,14 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModelHandlerImpl
 		Object firstElement = treeSelection.getFirstElement();
 		if (firstElement instanceof MasterDetailTreeNode) {
 			MasterDetailTreeNode treeNode = (MasterDetailTreeNode) firstElement;
-			if(treeNode.getDatatype() instanceof TestResult) {
-				TestResult testResult = (TestResult) treeNode.getDatatype();
+			Datatype datatype = treeNode.getDatatype();
+			
+			if(!MasterDetailHelper.isDatatypeEditable(datatype)){
+				return null;
+			}
+			
+			if(datatype instanceof TestResult) {
+				TestResult testResult = (TestResult) datatype;
 				if(testResult.getJiraExport() != null && testResult.getJiraExport().getValue() != null && testResult.getJiraExport().getValue()){
 
 					// Execute
@@ -99,7 +106,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModelHandlerImpl
 				}
 			} 
 
-			if(treeNode.getDatatype() instanceof ManualTestResult){
+			if(datatype instanceof ManualTestResult){
 				// If not root case
 				if (treeNode.getParent() != null) {
 					// Remove

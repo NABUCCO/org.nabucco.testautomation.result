@@ -3,11 +3,16 @@
  */
 package org.nabucco.testautomation.result.facade.datatype.trace;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
-import org.nabucco.framework.base.facade.datatype.property.BasetypeProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 
 /**
@@ -19,9 +24,11 @@ public class MessageTrace extends ActionTrace implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "request", "response" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "l0,100000;m0,1;", "l0,100000;m0,1;" };
+
+    public static final String REQUEST = "request";
+
+    public static final String RESPONSE = "response";
 
     private LogTrace request;
 
@@ -52,19 +59,50 @@ public class MessageTrace extends ActionTrace implements Datatype {
         }
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap
+                .putAll(PropertyCache.getInstance().retrieve(ActionTrace.class).getPropertyMap());
+        propertyMap.put(REQUEST, PropertyDescriptorSupport.createBasetype(REQUEST, LogTrace.class,
+                8, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(RESPONSE, PropertyDescriptorSupport.createBasetype(RESPONSE,
+                LogTrace.class, 9, PROPERTY_CONSTRAINTS[1], false));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
     public void init() {
         this.initDefaults();
     }
 
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new BasetypeProperty<LogTrace>(PROPERTY_NAMES[0], LogTrace.class,
-                PROPERTY_CONSTRAINTS[0], this.request));
-        properties.add(new BasetypeProperty<LogTrace>(PROPERTY_NAMES[1], LogTrace.class,
-                PROPERTY_CONSTRAINTS[1], this.response));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(MessageTrace.getPropertyDescriptor(REQUEST),
+                this.request, null));
+        properties.add(super.createProperty(MessageTrace.getPropertyDescriptor(RESPONSE),
+                this.response, null));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(REQUEST) && (property.getType() == LogTrace.class))) {
+            this.setRequest(((LogTrace) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(RESPONSE) && (property.getType() == LogTrace.class))) {
+            this.setResponse(((LogTrace) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -105,17 +143,6 @@ public class MessageTrace extends ActionTrace implements Datatype {
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<MessageTrace>\n");
-        appendable.append(super.toString());
-        appendable.append((("<request>" + this.request) + "</request>\n"));
-        appendable.append((("<response>" + this.response) + "</response>\n"));
-        appendable.append("</MessageTrace>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public MessageTrace cloneObject() {
         MessageTrace clone = new MessageTrace();
         this.cloneObject(clone);
@@ -147,6 +174,9 @@ public class MessageTrace extends ActionTrace implements Datatype {
      */
     public void setRequest(String request) {
         if ((this.request == null)) {
+            if ((request == null)) {
+                return;
+            }
             this.request = new LogTrace();
         }
         this.request.setValue(request);
@@ -177,8 +207,30 @@ public class MessageTrace extends ActionTrace implements Datatype {
      */
     public void setResponse(String response) {
         if ((this.response == null)) {
+            if ((response == null)) {
+                return;
+            }
             this.response = new LogTrace();
         }
         this.response.setValue(response);
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(MessageTrace.class).getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(MessageTrace.class).getAllProperties();
     }
 }

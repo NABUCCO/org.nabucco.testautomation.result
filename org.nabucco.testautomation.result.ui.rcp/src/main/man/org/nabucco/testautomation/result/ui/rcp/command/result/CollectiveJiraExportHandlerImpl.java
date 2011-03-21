@@ -8,7 +8,7 @@ import org.nabucco.framework.plugin.base.layout.ImageProvider;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.ui.rcp.images.ResultImageRegistry;
 import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.TestConfigurationResultMaintenanceMultiPageEditView;
-import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.multi.CollectiveJiraExportWizard;
+import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.JiraBulkExportWizard;
 
 public class CollectiveJiraExportHandlerImpl implements CollectiveJiraExportHandler {
 
@@ -24,7 +24,7 @@ public class CollectiveJiraExportHandlerImpl implements CollectiveJiraExportHand
 				TestConfigurationResultMaintenanceMultiPageEditView view = (TestConfigurationResultMaintenanceMultiPageEditView) Activator.getDefault().getView(TestConfigurationResultMaintenanceMultiPageEditView.ID);
 				TestConfigurationResult testConfigurationResult = view.getModel().getTestConfigurationResult();
 
-				CollectiveJiraExportWizard wizard = new CollectiveJiraExportWizard(testConfigurationResult);
+				JiraBulkExportWizard wizard = new JiraBulkExportWizard(testConfigurationResult);
 				wizard.init(Activator.getDefault().getWorkbench(), StructuredSelection.EMPTY);
 				WizardDialog wizardDialog = new WizardDialog(null, wizard);
 				wizardDialog.setBlockOnOpen(true);

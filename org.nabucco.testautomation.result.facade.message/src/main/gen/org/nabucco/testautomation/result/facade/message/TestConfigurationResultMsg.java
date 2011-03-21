@@ -3,9 +3,15 @@
  */
 package org.nabucco.testautomation.result.facade.message;
 
+import java.util.HashMap;
 import java.util.List;
-import org.nabucco.framework.base.facade.datatype.property.DatatypeProperty;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.framework.base.facade.message.ServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceMessageSupport;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
@@ -20,9 +26,9 @@ public class TestConfigurationResultMsg extends ServiceMessageSupport implements
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "testConfigurationResult" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;" };
+
+    public static final String TESTCONFIGURATIONRESULT = "testConfigurationResult";
 
     private TestConfigurationResult testConfigurationResult;
 
@@ -31,13 +37,38 @@ public class TestConfigurationResultMsg extends ServiceMessageSupport implements
         super();
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.put(TESTCONFIGURATIONRESULT, PropertyDescriptorSupport.createDatatype(
+                TESTCONFIGURATIONRESULT, TestConfigurationResult.class, 0, PROPERTY_CONSTRAINTS[0],
+                false, PropertyAssociationType.COMPOSITION));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new DatatypeProperty<TestConfigurationResult>(PROPERTY_NAMES[0],
-                TestConfigurationResult.class, PROPERTY_CONSTRAINTS[0],
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(
+                TestConfigurationResultMsg.getPropertyDescriptor(TESTCONFIGURATIONRESULT),
                 this.testConfigurationResult));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(TESTCONFIGURATIONRESULT) && (property.getType() == TestConfigurationResult.class))) {
+            this.setTestConfigurationResult(((TestConfigurationResult) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -73,17 +104,6 @@ public class TestConfigurationResultMsg extends ServiceMessageSupport implements
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<TestConfigurationResultMsg>\n");
-        appendable.append(super.toString());
-        appendable
-                .append((("<testConfigurationResult>" + this.testConfigurationResult) + "</testConfigurationResult>\n"));
-        appendable.append("</TestConfigurationResultMsg>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public ServiceMessage cloneObject() {
         return this;
     }
@@ -104,5 +124,26 @@ public class TestConfigurationResultMsg extends ServiceMessageSupport implements
      */
     public void setTestConfigurationResult(TestConfigurationResult testConfigurationResult) {
         this.testConfigurationResult = testConfigurationResult;
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(TestConfigurationResultMsg.class)
+                .getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(TestConfigurationResultMsg.class)
+                .getAllProperties();
     }
 }

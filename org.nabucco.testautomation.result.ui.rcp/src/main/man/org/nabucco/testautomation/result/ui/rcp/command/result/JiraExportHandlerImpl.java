@@ -11,7 +11,7 @@ import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.ui.rcp.images.ResultImageRegistry;
 import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.TestConfigurationResultMaintenanceMultiPageEditView;
-import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.single.SingleJiraExportWizard;
+import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.jiraexport.wizard.JiraExportWizard;
 
 public class JiraExportHandlerImpl implements JiraExportHandler {
 
@@ -25,7 +25,7 @@ public class JiraExportHandlerImpl implements JiraExportHandler {
 				TestResult testResult = (TestResult) ((MasterDetailTreeNode) ((IStructuredSelection) view.getMasterDetailsBlock().getTreeViewer().getSelection()).getFirstElement()).getDatatype();
 				TestConfigurationResult testConfigurationResult = view.getModel().getTestConfigurationResult();
 				
-				SingleJiraExportWizard wizard = new SingleJiraExportWizard(testConfigurationResult, testResult);
+				JiraExportWizard wizard = new JiraExportWizard(testConfigurationResult, testResult);
 				wizard.init(Activator.getDefault().getWorkbench(), StructuredSelection.EMPTY);
 				WizardDialog wizardDialog = new WizardDialog(null, wizard);
 				wizardDialog.setBlockOnOpen(true);

@@ -3,7 +3,7 @@
  */
 package org.nabucco.testautomation.result.ui.web.communication.maintain;
 
-import org.nabucco.framework.base.facade.datatype.security.Subject;
+import org.nabucco.framework.base.facade.datatype.session.NabuccoSession;
 import org.nabucco.framework.base.facade.exception.service.MaintainException;
 import org.nabucco.framework.base.facade.message.ServiceRequest;
 import org.nabucco.framework.base.facade.message.ServiceResponse;
@@ -34,37 +34,15 @@ public class MaintainTestConfigurationResultDelegate extends ServiceDelegateSupp
     /**
      * MaintainTestConfigurationResult.
      *
-     * @param rq the TestConfigurationResultMsg.
-     * @return the TestConfigurationResultMsg.
-     * @throws MaintainException
-     */
-    public TestConfigurationResultMsg maintainTestConfigurationResult(TestConfigurationResultMsg rq)
-            throws MaintainException {
-        ServiceRequest<TestConfigurationResultMsg> request = new ServiceRequest<TestConfigurationResultMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TestConfigurationResultMsg> rs;
-        if ((service != null)) {
-            rs = service.maintainTestConfigurationResult(request);
-        } else {
-            throw new MaintainException(
-                    "Cannot execute service operation: MaintainTestConfigurationResult.maintainTestConfigurationResult");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * MaintainTestConfigurationResult.
-     *
-     * @param subject the Subject.
+     * @param session the NabuccoSession.
      * @param rq the TestConfigurationResultMsg.
      * @return the TestConfigurationResultMsg.
      * @throws MaintainException
      */
     public TestConfigurationResultMsg maintainTestConfigurationResult(
-            TestConfigurationResultMsg rq, Subject subject) throws MaintainException {
+            TestConfigurationResultMsg rq, NabuccoSession session) throws MaintainException {
         ServiceRequest<TestConfigurationResultMsg> request = new ServiceRequest<TestConfigurationResultMsg>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TestConfigurationResultMsg> rs;
         if ((service != null)) {

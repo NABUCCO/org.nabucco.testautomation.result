@@ -3,11 +3,19 @@
  */
 package org.nabucco.testautomation.result.facade.message.jira;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
 import org.nabucco.framework.base.facade.datatype.issuetracking.ProjectComponent;
-import org.nabucco.framework.base.facade.datatype.property.ListProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.framework.base.facade.message.ServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceMessageSupport;
 
@@ -21,23 +29,49 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "components" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "m0,n;" };
 
-    private List<ProjectComponent> components;
+    public static final String COMPONENTS = "components";
+
+    private NabuccoList<ProjectComponent> components;
 
     /** Constructs a new ComponentListMsg instance. */
     public ComponentListMsg() {
         super();
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.put(COMPONENTS, PropertyDescriptorSupport.createCollection(COMPONENTS,
+                ProjectComponent.class, 0, PROPERTY_CONSTRAINTS[0], false,
+                PropertyAssociationType.COMPONENT));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new ListProperty<ProjectComponent>(PROPERTY_NAMES[0],
-                ProjectComponent.class, PROPERTY_CONSTRAINTS[0], this.components));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ComponentListMsg.getPropertyDescriptor(COMPONENTS),
+                this.components));
         return properties;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(COMPONENTS) && (property.getType() == ProjectComponent.class))) {
+            this.components = ((NabuccoList<ProjectComponent>) property.getInstance());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -72,16 +106,6 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<ComponentListMsg>\n");
-        appendable.append(super.toString());
-        appendable.append((("<components>" + this.components) + "</components>\n"));
-        appendable.append("</ComponentListMsg>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public ServiceMessage cloneObject() {
         return this;
     }
@@ -89,12 +113,33 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
     /**
      * Missing description at method getComponents.
      *
-     * @return the List<ProjectComponent>.
+     * @return the NabuccoList<ProjectComponent>.
      */
-    public List<ProjectComponent> getComponents() {
+    public NabuccoList<ProjectComponent> getComponents() {
         if ((this.components == null)) {
-            this.components = new ArrayList<ProjectComponent>();
+            this.components = new NabuccoListImpl<ProjectComponent>(
+                    NabuccoCollectionState.INITIALIZED);
         }
         return this.components;
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(ComponentListMsg.class)
+                .getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(ComponentListMsg.class).getAllProperties();
     }
 }

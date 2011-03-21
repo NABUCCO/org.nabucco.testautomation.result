@@ -3,14 +3,17 @@
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
-import org.nabucco.framework.base.facade.datatype.property.BasetypeProperty;
-import org.nabucco.framework.base.facade.datatype.property.EnumProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
-import org.nabucco.testautomation.facade.datatype.base.Text;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.testautomation.result.facade.datatype.status.TestScriptElementStatusType;
 
 /**
@@ -22,19 +25,15 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "elementStatus", "elementId", "message",
-            "errorMessage" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,n;m1,1;" };
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,n;m1,1;", "l0,n;m0,1;",
-            "l0,n;m0,1;" };
+    public static final String ELEMENTSTATUS = "elementStatus";
+
+    public static final String ELEMENTID = "elementId";
 
     private TestScriptElementStatusType elementStatus;
 
     private Identifier elementId;
-
-    private Text message;
-
-    private Text errorMessage;
 
     /** Constructs a new TestScriptElementResult instance. */
     public TestScriptElementResult() {
@@ -58,12 +57,22 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
         if ((this.getElementId() != null)) {
             clone.setElementId(this.getElementId().cloneObject());
         }
-        if ((this.getMessage() != null)) {
-            clone.setMessage(this.getMessage().cloneObject());
-        }
-        if ((this.getErrorMessage() != null)) {
-            clone.setErrorMessage(this.getErrorMessage().cloneObject());
-        }
+    }
+
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class)
+                .getPropertyMap());
+        propertyMap.put(ELEMENTSTATUS, PropertyDescriptorSupport.createEnumeration(ELEMENTSTATUS,
+                TestScriptElementStatusType.class, 2, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(ELEMENTID, PropertyDescriptorSupport.createBasetype(ELEMENTID,
+                Identifier.class, 3, PROPERTY_CONSTRAINTS[1], false));
+        return new NabuccoPropertyContainer(propertyMap);
     }
 
     @Override
@@ -72,17 +81,29 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
     }
 
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new EnumProperty<TestScriptElementStatusType>(PROPERTY_NAMES[0],
-                TestScriptElementStatusType.class, PROPERTY_CONSTRAINTS[0], this.elementStatus));
-        properties.add(new BasetypeProperty<Identifier>(PROPERTY_NAMES[1], Identifier.class,
-                PROPERTY_CONSTRAINTS[1], this.elementId));
-        properties.add(new BasetypeProperty<Text>(PROPERTY_NAMES[2], Text.class,
-                PROPERTY_CONSTRAINTS[2], this.message));
-        properties.add(new BasetypeProperty<Text>(PROPERTY_NAMES[3], Text.class,
-                PROPERTY_CONSTRAINTS[3], this.errorMessage));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(
+                TestScriptElementResult.getPropertyDescriptor(ELEMENTSTATUS), this.elementStatus,
+                null));
+        properties.add(super.createProperty(
+                TestScriptElementResult.getPropertyDescriptor(ELEMENTID), this.elementId, null));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(ELEMENTSTATUS) && (property.getType() == TestScriptElementStatusType.class))) {
+            this.setElementStatus(((TestScriptElementStatusType) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(ELEMENTID) && (property.getType() == Identifier.class))) {
+            this.setElementId(((Identifier) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -110,16 +131,6 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
                 return false;
         } else if ((!this.elementId.equals(other.elementId)))
             return false;
-        if ((this.message == null)) {
-            if ((other.message != null))
-                return false;
-        } else if ((!this.message.equals(other.message)))
-            return false;
-        if ((this.errorMessage == null)) {
-            if ((other.errorMessage != null))
-                return false;
-        } else if ((!this.errorMessage.equals(other.errorMessage)))
-            return false;
         return true;
     }
 
@@ -130,23 +141,7 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
         result = ((PRIME * result) + ((this.elementStatus == null) ? 0 : this.elementStatus
                 .hashCode()));
         result = ((PRIME * result) + ((this.elementId == null) ? 0 : this.elementId.hashCode()));
-        result = ((PRIME * result) + ((this.message == null) ? 0 : this.message.hashCode()));
-        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage
-                .hashCode()));
         return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<TestScriptElementResult>\n");
-        appendable.append(super.toString());
-        appendable.append((("<elementStatus>" + this.elementStatus) + "</elementStatus>\n"));
-        appendable.append((("<elementId>" + this.elementId) + "</elementId>\n"));
-        appendable.append((("<message>" + this.message) + "</message>\n"));
-        appendable.append((("<errorMessage>" + this.errorMessage) + "</errorMessage>\n"));
-        appendable.append("</TestScriptElementResult>\n");
-        return appendable.toString();
     }
 
     @Override
@@ -212,68 +207,32 @@ public class TestScriptElementResult extends NabuccoDatatype implements Datatype
      */
     public void setElementId(Long elementId) {
         if ((this.elementId == null)) {
+            if ((elementId == null)) {
+                return;
+            }
             this.elementId = new Identifier();
         }
         this.elementId.setValue(elementId);
     }
 
     /**
-     * Missing description at method getMessage.
+     * Getter for the PropertyDescriptor.
      *
-     * @return the Text.
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
      */
-    public Text getMessage() {
-        return this.message;
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(TestScriptElementResult.class)
+                .getProperty(propertyName);
     }
 
     /**
-     * Missing description at method setMessage.
+     * Getter for the PropertyDescriptorList.
      *
-     * @param message the Text.
+     * @return the List<NabuccoPropertyDescriptor>.
      */
-    public void setMessage(Text message) {
-        this.message = message;
-    }
-
-    /**
-     * Missing description at method setMessage.
-     *
-     * @param message the String.
-     */
-    public void setMessage(String message) {
-        if ((this.message == null)) {
-            this.message = new Text();
-        }
-        this.message.setValue(message);
-    }
-
-    /**
-     * Missing description at method getErrorMessage.
-     *
-     * @return the Text.
-     */
-    public Text getErrorMessage() {
-        return this.errorMessage;
-    }
-
-    /**
-     * Missing description at method setErrorMessage.
-     *
-     * @param errorMessage the Text.
-     */
-    public void setErrorMessage(Text errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    /**
-     * Missing description at method setErrorMessage.
-     *
-     * @param errorMessage the String.
-     */
-    public void setErrorMessage(String errorMessage) {
-        if ((this.errorMessage == null)) {
-            this.errorMessage = new Text();
-        }
-        this.errorMessage.setValue(errorMessage);
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(TestScriptElementResult.class)
+                .getAllProperties();
     }
 }

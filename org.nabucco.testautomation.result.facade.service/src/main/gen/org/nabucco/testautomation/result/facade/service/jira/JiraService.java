@@ -15,6 +15,7 @@ import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.PriorityListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectMsg;
+import org.nabucco.testautomation.result.facade.message.jira.VersionListMsg;
 
 /**
  * JiraService<p/>Jira export service<p/>
@@ -81,4 +82,14 @@ public interface JiraService extends Service {
      * @throws MaintainException
      */
     ServiceResponse<IssueMsg> createIssues(ServiceRequest<IssueMsg> rq) throws MaintainException;
+
+    /**
+     * Missing description at method getVersionsOfProject.
+     *
+     * @param rq the ServiceRequest<ProjectMsg>.
+     * @return the ServiceResponse<VersionListMsg>.
+     * @throws SearchException
+     */
+    ServiceResponse<VersionListMsg> getVersionsOfProject(ServiceRequest<ProjectMsg> rq)
+            throws SearchException;
 }

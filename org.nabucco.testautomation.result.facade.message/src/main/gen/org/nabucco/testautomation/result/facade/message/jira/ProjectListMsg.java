@@ -3,11 +3,19 @@
  */
 package org.nabucco.testautomation.result.facade.message.jira;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
 import org.nabucco.framework.base.facade.datatype.issuetracking.Project;
-import org.nabucco.framework.base.facade.datatype.property.ListProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.framework.base.facade.message.ServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceMessageSupport;
 
@@ -21,23 +29,49 @@ public class ProjectListMsg extends ServiceMessageSupport implements ServiceMess
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "projects" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "m0,n;" };
 
-    private List<Project> projects;
+    public static final String PROJECTS = "projects";
+
+    private NabuccoList<Project> projects;
 
     /** Constructs a new ProjectListMsg instance. */
     public ProjectListMsg() {
         super();
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.put(PROJECTS, PropertyDescriptorSupport
+                .createCollection(PROJECTS, Project.class, 0, PROPERTY_CONSTRAINTS[0], false,
+                        PropertyAssociationType.COMPONENT));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new ListProperty<Project>(PROPERTY_NAMES[0], Project.class,
-                PROPERTY_CONSTRAINTS[0], this.projects));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ProjectListMsg.getPropertyDescriptor(PROJECTS),
+                this.projects));
         return properties;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(PROJECTS) && (property.getType() == Project.class))) {
+            this.projects = ((NabuccoList<Project>) property.getInstance());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -72,16 +106,6 @@ public class ProjectListMsg extends ServiceMessageSupport implements ServiceMess
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<ProjectListMsg>\n");
-        appendable.append(super.toString());
-        appendable.append((("<projects>" + this.projects) + "</projects>\n"));
-        appendable.append("</ProjectListMsg>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public ServiceMessage cloneObject() {
         return this;
     }
@@ -89,12 +113,31 @@ public class ProjectListMsg extends ServiceMessageSupport implements ServiceMess
     /**
      * Missing description at method getProjects.
      *
-     * @return the List<Project>.
+     * @return the NabuccoList<Project>.
      */
-    public List<Project> getProjects() {
+    public NabuccoList<Project> getProjects() {
         if ((this.projects == null)) {
-            this.projects = new ArrayList<Project>();
+            this.projects = new NabuccoListImpl<Project>(NabuccoCollectionState.INITIALIZED);
         }
         return this.projects;
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(ProjectListMsg.class).getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(ProjectListMsg.class).getAllProperties();
     }
 }

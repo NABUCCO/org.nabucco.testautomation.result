@@ -26,7 +26,10 @@ public class TestConfigurationResultListViewTableFilter extends NabuccoTableFilt
             result = true;
         } else if ((element instanceof TestConfigurationResult)) {
             TestConfigurationResult datatype = ((TestConfigurationResult) element);
+            result = (result || this.contains(datatype.getIdentificationKey(),
+                    searchFilter.getFilter()));
             result = (result || this.contains(datatype.getName(), searchFilter.getFilter()));
+            result = (result || this.contains(datatype.getOwner(), searchFilter.getFilter()));
         }
         return result;
     }

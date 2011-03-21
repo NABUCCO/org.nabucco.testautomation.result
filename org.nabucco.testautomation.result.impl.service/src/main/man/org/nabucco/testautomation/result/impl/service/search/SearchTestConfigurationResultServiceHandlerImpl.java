@@ -48,6 +48,10 @@ public class SearchTestConfigurationResultServiceHandlerImpl extends
 
 		List<String> filter = new ArrayList<String>();
 
+		if (msg.getOwner() != null && msg.getOwner().getValue() != null) {
+			filter.add("r.owner = :owner");
+		}
+		
 		if (msg.getName() != null && msg.getName().getValue() != null) {
 			filter.add("r.name LIKE '" + msg.getName().getValue() + "%'");
 		}
@@ -82,6 +86,10 @@ public class SearchTestConfigurationResultServiceHandlerImpl extends
 
 		Query query = super.getEntityManager().createQuery(
 				queryString.toString());
+		
+		if (msg.getOwner() != null && msg.getOwner().getValue() != null) {
+			query.setParameter("owner", msg.getOwner());
+		}
 		
 		if (msg.getTestConfigurationId() != null && msg.getTestConfigurationId().getValue() != null) {
 			query.setParameter("testConfigId", msg.getTestConfigurationId());

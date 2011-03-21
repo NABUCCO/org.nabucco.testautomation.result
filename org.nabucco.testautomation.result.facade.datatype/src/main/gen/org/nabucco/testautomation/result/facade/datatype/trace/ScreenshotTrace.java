@@ -3,12 +3,17 @@
  */
 package org.nabucco.testautomation.result.facade.datatype.trace;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.image.ImageData;
-import org.nabucco.framework.base.facade.datatype.property.BasetypeProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 
 /**
@@ -20,9 +25,11 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "screenshot", "imageId" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "l0,n;m0,1;", "l0,n;m0,1;" };
+
+    public static final String SCREENSHOT = "screenshot";
+
+    public static final String IMAGEID = "imageId";
 
     private ImageData screenshot;
 
@@ -53,19 +60,50 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
         }
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap
+                .putAll(PropertyCache.getInstance().retrieve(ActionTrace.class).getPropertyMap());
+        propertyMap.put(SCREENSHOT, PropertyDescriptorSupport.createBasetype(SCREENSHOT,
+                ImageData.class, 8, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(IMAGEID, PropertyDescriptorSupport.createBasetype(IMAGEID,
+                Identifier.class, 9, PROPERTY_CONSTRAINTS[1], false));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
     public void init() {
         this.initDefaults();
     }
 
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new BasetypeProperty<ImageData>(PROPERTY_NAMES[0], ImageData.class,
-                PROPERTY_CONSTRAINTS[0], this.screenshot));
-        properties.add(new BasetypeProperty<Identifier>(PROPERTY_NAMES[1], Identifier.class,
-                PROPERTY_CONSTRAINTS[1], this.imageId));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(SCREENSHOT),
+                this.screenshot, null));
+        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(IMAGEID),
+                this.imageId, null));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(SCREENSHOT) && (property.getType() == ImageData.class))) {
+            this.setScreenshot(((ImageData) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(IMAGEID) && (property.getType() == Identifier.class))) {
+            this.setImageId(((Identifier) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -106,17 +144,6 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<ScreenshotTrace>\n");
-        appendable.append(super.toString());
-        appendable.append((("<screenshot>" + this.screenshot) + "</screenshot>\n"));
-        appendable.append((("<imageId>" + this.imageId) + "</imageId>\n"));
-        appendable.append("</ScreenshotTrace>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public ScreenshotTrace cloneObject() {
         ScreenshotTrace clone = new ScreenshotTrace();
         this.cloneObject(clone);
@@ -148,6 +175,9 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
      */
     public void setScreenshot(byte[] screenshot) {
         if ((this.screenshot == null)) {
+            if ((screenshot == null)) {
+                return;
+            }
             this.screenshot = new ImageData();
         }
         this.screenshot.setValue(screenshot);
@@ -178,8 +208,31 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
      */
     public void setImageId(Long imageId) {
         if ((this.imageId == null)) {
+            if ((imageId == null)) {
+                return;
+            }
             this.imageId = new Identifier();
         }
         this.imageId.setValue(imageId);
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(ScreenshotTrace.class)
+                .getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(ScreenshotTrace.class).getAllProperties();
     }
 }

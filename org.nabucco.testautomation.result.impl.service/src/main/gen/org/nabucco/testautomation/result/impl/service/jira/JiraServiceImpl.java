@@ -17,6 +17,7 @@ import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.PriorityListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectMsg;
+import org.nabucco.testautomation.result.facade.message.jira.VersionListMsg;
 import org.nabucco.testautomation.result.facade.service.jira.JiraService;
 
 /**
@@ -42,6 +43,8 @@ public class JiraServiceImpl extends ServiceSupport implements JiraService {
     private CreateIssueServiceHandler createIssueServiceHandler;
 
     private CreateIssuesServiceHandler createIssuesServiceHandler;
+
+    private GetVersionsOfProjectServiceHandler getVersionsOfProjectServiceHandler;
 
     /** Constructs a new JiraServiceImpl instance. */
     public JiraServiceImpl() {
@@ -82,6 +85,12 @@ public class JiraServiceImpl extends ServiceSupport implements JiraService {
         if ((this.createIssuesServiceHandler != null)) {
             this.createIssuesServiceHandler.setEntityManager(null);
             this.createIssuesServiceHandler.setLogger(super.getLogger());
+        }
+        this.getVersionsOfProjectServiceHandler = injector
+                .inject(GetVersionsOfProjectServiceHandler.getId());
+        if ((this.getVersionsOfProjectServiceHandler != null)) {
+            this.getVersionsOfProjectServiceHandler.setEntityManager(null);
+            this.getVersionsOfProjectServiceHandler.setLogger(super.getLogger());
         }
     }
 
@@ -175,6 +184,22 @@ public class JiraServiceImpl extends ServiceSupport implements JiraService {
         this.createIssuesServiceHandler.init();
         rs = this.createIssuesServiceHandler.invoke(rq);
         this.createIssuesServiceHandler.finish();
+        return rs;
+    }
+
+    @Override
+    public ServiceResponse<VersionListMsg> getVersionsOfProject(ServiceRequest<ProjectMsg> rq)
+            throws SearchException {
+        if ((this.getVersionsOfProjectServiceHandler == null)) {
+            super.getLogger().error(
+                    "No service implementation configured for getVersionsOfProject().");
+            throw new InjectionException(
+                    "No service implementation configured for getVersionsOfProject().");
+        }
+        ServiceResponse<VersionListMsg> rs;
+        this.getVersionsOfProjectServiceHandler.init();
+        rs = this.getVersionsOfProjectServiceHandler.invoke(rq);
+        this.getVersionsOfProjectServiceHandler.finish();
         return rs;
     }
 }

@@ -3,12 +3,17 @@
  */
 package org.nabucco.testautomation.result.facade.datatype.trace;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.Data;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Identifier;
-import org.nabucco.framework.base.facade.datatype.property.BasetypeProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 
 /**
@@ -20,9 +25,11 @@ public class FileTrace extends ActionTrace implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "fileContent", "fileId" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "l0,n;m0,1;", "l0,n;m0,1;" };
+
+    public static final String FILECONTENT = "fileContent";
+
+    public static final String FILEID = "fileId";
 
     private Data fileContent;
 
@@ -53,19 +60,50 @@ public class FileTrace extends ActionTrace implements Datatype {
         }
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap
+                .putAll(PropertyCache.getInstance().retrieve(ActionTrace.class).getPropertyMap());
+        propertyMap.put(FILECONTENT, PropertyDescriptorSupport.createBasetype(FILECONTENT,
+                Data.class, 8, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(FILEID, PropertyDescriptorSupport.createBasetype(FILEID, Identifier.class,
+                9, PROPERTY_CONSTRAINTS[1], false));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
     public void init() {
         this.initDefaults();
     }
 
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new BasetypeProperty<Data>(PROPERTY_NAMES[0], Data.class,
-                PROPERTY_CONSTRAINTS[0], this.fileContent));
-        properties.add(new BasetypeProperty<Identifier>(PROPERTY_NAMES[1], Identifier.class,
-                PROPERTY_CONSTRAINTS[1], this.fileId));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(FileTrace.getPropertyDescriptor(FILECONTENT),
+                this.fileContent, null));
+        properties.add(super.createProperty(FileTrace.getPropertyDescriptor(FILEID), this.fileId,
+                null));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(FILECONTENT) && (property.getType() == Data.class))) {
+            this.setFileContent(((Data) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(FILEID) && (property.getType() == Identifier.class))) {
+            this.setFileId(((Identifier) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -106,17 +144,6 @@ public class FileTrace extends ActionTrace implements Datatype {
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<FileTrace>\n");
-        appendable.append(super.toString());
-        appendable.append((("<fileContent>" + this.fileContent) + "</fileContent>\n"));
-        appendable.append((("<fileId>" + this.fileId) + "</fileId>\n"));
-        appendable.append("</FileTrace>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public FileTrace cloneObject() {
         FileTrace clone = new FileTrace();
         this.cloneObject(clone);
@@ -148,6 +175,9 @@ public class FileTrace extends ActionTrace implements Datatype {
      */
     public void setFileContent(byte[] fileContent) {
         if ((this.fileContent == null)) {
+            if ((fileContent == null)) {
+                return;
+            }
             this.fileContent = new Data();
         }
         this.fileContent.setValue(fileContent);
@@ -178,8 +208,30 @@ public class FileTrace extends ActionTrace implements Datatype {
      */
     public void setFileId(Long fileId) {
         if ((this.fileId == null)) {
+            if ((fileId == null)) {
+                return;
+            }
             this.fileId = new Identifier();
         }
         this.fileId.setValue(fileId);
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(FileTrace.class).getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(FileTrace.class).getAllProperties();
     }
 }

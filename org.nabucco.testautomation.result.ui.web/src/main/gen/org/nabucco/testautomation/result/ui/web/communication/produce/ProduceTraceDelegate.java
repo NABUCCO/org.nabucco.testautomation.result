@@ -3,7 +3,7 @@
  */
 package org.nabucco.testautomation.result.ui.web.communication.produce;
 
-import org.nabucco.framework.base.facade.datatype.security.Subject;
+import org.nabucco.framework.base.facade.datatype.session.NabuccoSession;
 import org.nabucco.framework.base.facade.exception.service.ProduceException;
 import org.nabucco.framework.base.facade.message.EmptyServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceRequest;
@@ -35,36 +35,15 @@ public class ProduceTraceDelegate extends ServiceDelegateSupport {
     /**
      * ProduceActionTrace.
      *
+     * @param session the NabuccoSession.
      * @param rq the EmptyServiceMessage.
      * @return the TraceMsg.
      * @throws ProduceException
      */
-    public TraceMsg produceActionTrace(EmptyServiceMessage rq) throws ProduceException {
-        ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TraceMsg> rs;
-        if ((service != null)) {
-            rs = service.produceActionTrace(request);
-        } else {
-            throw new ProduceException(
-                    "Cannot execute service operation: ProduceTrace.produceActionTrace");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * ProduceActionTrace.
-     *
-     * @param subject the Subject.
-     * @param rq the EmptyServiceMessage.
-     * @return the TraceMsg.
-     * @throws ProduceException
-     */
-    public TraceMsg produceActionTrace(EmptyServiceMessage rq, Subject subject)
+    public TraceMsg produceActionTrace(EmptyServiceMessage rq, NabuccoSession session)
             throws ProduceException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TraceMsg> rs;
         if ((service != null)) {
@@ -79,36 +58,15 @@ public class ProduceTraceDelegate extends ServiceDelegateSupport {
     /**
      * ProduceMessageTrace.
      *
+     * @param session the NabuccoSession.
      * @param rq the EmptyServiceMessage.
      * @return the TraceMsg.
      * @throws ProduceException
      */
-    public TraceMsg produceMessageTrace(EmptyServiceMessage rq) throws ProduceException {
-        ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TraceMsg> rs;
-        if ((service != null)) {
-            rs = service.produceMessageTrace(request);
-        } else {
-            throw new ProduceException(
-                    "Cannot execute service operation: ProduceTrace.produceMessageTrace");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * ProduceMessageTrace.
-     *
-     * @param subject the Subject.
-     * @param rq the EmptyServiceMessage.
-     * @return the TraceMsg.
-     * @throws ProduceException
-     */
-    public TraceMsg produceMessageTrace(EmptyServiceMessage rq, Subject subject)
+    public TraceMsg produceMessageTrace(EmptyServiceMessage rq, NabuccoSession session)
             throws ProduceException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TraceMsg> rs;
         if ((service != null)) {
@@ -123,36 +81,15 @@ public class ProduceTraceDelegate extends ServiceDelegateSupport {
     /**
      * ProduceScreenshotTrace.
      *
+     * @param session the NabuccoSession.
      * @param rq the EmptyServiceMessage.
      * @return the TraceMsg.
      * @throws ProduceException
      */
-    public TraceMsg produceScreenshotTrace(EmptyServiceMessage rq) throws ProduceException {
-        ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TraceMsg> rs;
-        if ((service != null)) {
-            rs = service.produceScreenshotTrace(request);
-        } else {
-            throw new ProduceException(
-                    "Cannot execute service operation: ProduceTrace.produceScreenshotTrace");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * ProduceScreenshotTrace.
-     *
-     * @param subject the Subject.
-     * @param rq the EmptyServiceMessage.
-     * @return the TraceMsg.
-     * @throws ProduceException
-     */
-    public TraceMsg produceScreenshotTrace(EmptyServiceMessage rq, Subject subject)
+    public TraceMsg produceScreenshotTrace(EmptyServiceMessage rq, NabuccoSession session)
             throws ProduceException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TraceMsg> rs;
         if ((service != null)) {
@@ -167,36 +104,15 @@ public class ProduceTraceDelegate extends ServiceDelegateSupport {
     /**
      * ProduceFileTrace.
      *
+     * @param session the NabuccoSession.
      * @param rq the EmptyServiceMessage.
      * @return the TraceMsg.
      * @throws ProduceException
      */
-    public TraceMsg produceFileTrace(EmptyServiceMessage rq) throws ProduceException {
-        ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TraceMsg> rs;
-        if ((service != null)) {
-            rs = service.produceFileTrace(request);
-        } else {
-            throw new ProduceException(
-                    "Cannot execute service operation: ProduceTrace.produceFileTrace");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * ProduceFileTrace.
-     *
-     * @param subject the Subject.
-     * @param rq the EmptyServiceMessage.
-     * @return the TraceMsg.
-     * @throws ProduceException
-     */
-    public TraceMsg produceFileTrace(EmptyServiceMessage rq, Subject subject)
+    public TraceMsg produceFileTrace(EmptyServiceMessage rq, NabuccoSession session)
             throws ProduceException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TraceMsg> rs;
         if ((service != null)) {

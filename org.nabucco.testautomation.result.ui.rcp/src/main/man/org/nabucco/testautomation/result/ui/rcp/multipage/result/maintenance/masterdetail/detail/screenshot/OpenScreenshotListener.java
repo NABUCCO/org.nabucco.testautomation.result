@@ -34,7 +34,10 @@ import org.nabucco.testautomation.result.ui.rcp.images.ResultImageRegistry;
  * @author Marco Sussek, PRODYNA AG
  */
 public class OpenScreenshotListener implements SelectionListener {
+	
 	private Image image;
+	
+	private boolean modal;
 
 	/**
 	 * Creates a new {@link OpenScreenshotListener} instance.
@@ -42,10 +45,17 @@ public class OpenScreenshotListener implements SelectionListener {
 	 * @param screenshotTrace
 	 *            the screenshotTrace to be opened in the viewer.
 	 */
-	OpenScreenshotListener(ScreenshotTrace screenshotTrace) {
-		byte[] value = screenshotTrace.getScreenshot().getValue();
-		image = new Image(Activator.getDefault().getWorkbench().getDisplay(),
-				new ByteArrayInputStream(value));
+	public OpenScreenshotListener(ScreenshotTrace screenshotTrace, boolean modal) {
+		this.modal = modal;
+		
+		if (screenshotTrace != null && screenshotTrace.getScreenshot() != null) {
+			byte[] value = screenshotTrace.getScreenshot().getValue();
+			
+			if (value != null) {
+				image = new Image(Activator.getDefault().getWorkbench().getDisplay(),
+						new ByteArrayInputStream(value));
+			}
+		}
 	}
 
 	@Override
@@ -58,10 +68,19 @@ public class OpenScreenshotListener implements SelectionListener {
 	 */
 	@Override
 	public void widgetSelected(SelectionEvent arg0) {
-		ImageViewer imageViewer = new ImageViewer(SWT.DIALOG_TRIM
+		ImageViewer imageViewer = null;
+		
+		if (this.modal) {
+			imageViewer = new ImageViewer(SWT.DIALOG_TRIM
 				| SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
 				| ImageViewer.SAVE_DIALOG | ImageViewer.PRINT_DIALOG
 				| ImageViewer.ZOOM);
+		} else {
+			imageViewer = new ImageViewer(SWT.DIALOG_TRIM
+					| SWT.MODELESS | SWT.MAX | SWT.RESIZE
+					| ImageViewer.SAVE_DIALOG | ImageViewer.PRINT_DIALOG
+					| ImageViewer.ZOOM);
+		}
 		imageViewer.setTitle("Screenshot");
 		imageViewer.setDisplayedImage(image);
 		imageViewer.setIcon(ImageProvider

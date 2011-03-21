@@ -18,6 +18,7 @@ package org.nabucco.testautomation.result.impl.service.maintain;
 
 import java.util.List;
 
+import org.nabucco.framework.base.facade.component.NabuccoInstance;
 import org.nabucco.framework.base.facade.datatype.DatatypeState;
 import org.nabucco.framework.base.facade.datatype.visitor.DatatypeVisitor;
 import org.nabucco.framework.base.facade.exception.persistence.PersistenceException;
@@ -32,7 +33,6 @@ import org.nabucco.testautomation.result.facade.datatype.manual.ManualTestResult
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.message.TestConfigurationResultMsg;
 import org.nabucco.testautomation.result.impl.service.DynamicCodeSupport;
-import org.nabucco.testautomation.result.impl.service.maintain.MaintainTestConfigurationResultServiceHandler;
 import org.nabucco.testautomation.result.impl.service.maintain.visitor.TestConfigurationResultModificationVisitor;
 
 
@@ -46,6 +46,8 @@ public class MaintainTestConfigurationResultServiceHandlerImpl extends
 
 	private static final long serialVersionUID = 1L;
 	
+	private static final String PREFIX = "RESU-";
+	
 	private PersistenceHelper persistenceHelper;
 
 	@Override
@@ -53,6 +55,11 @@ public class MaintainTestConfigurationResultServiceHandlerImpl extends
 			TestConfigurationResultMsg msg) throws MaintainException {
 		
 		TestConfigurationResult result = msg.getTestConfigurationResult();
+		
+		// Set owner
+		if (result.getOwner() == null || result.getOwner().getValue() == null) {
+			result.setOwner(NabuccoInstance.getInstance().getOwner());
+		}
 		
 		try {
 			// initialize PersistenceHelper
@@ -165,6 +172,10 @@ public class MaintainTestConfigurationResultServiceHandlerImpl extends
 			testResultList.set(i, updatedTestResult);
 		}
 
+		entity.setOwner(NabuccoInstance.getInstance().getOwner());
+		entity = this.persistenceHelper.persist(entity);
+		entity.setIdentificationKey(PREFIX + entity.getId());
+		entity.setDatatypeState(DatatypeState.MODIFIED);
 		entity = this.persistenceHelper.persist(entity);
 		return entity;
 	}

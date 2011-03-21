@@ -76,6 +76,8 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	invisibleProperties.add("testConfigurationId");
     	invisibleProperties.add("id");
     	invisibleProperties.add("version");
+    	readOnlyProperties.add("owner");
+    	readOnlyProperties.add("identificationKey");
     	readOnlyProperties.add("status");
     	readOnlyProperties.add("testConfigurationName");
     	readOnlyProperties.add("testConfigurationId");
@@ -194,10 +196,10 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
         
         readOnlyProperties = new HashSet<String>();
         readOnlyProperties.add("name");
+        readOnlyProperties.add("actionId");
         invisibleProperties = new HashSet<String>();
     	invisibleProperties.add("id");
     	invisibleProperties.add("version");
-        invisibleProperties.add("actionId");
     	invisibleProperties.add("startTime");
     	invisibleProperties.add("endTime");
     	invisibleProperties.add("duration");
@@ -210,10 +212,10 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
         
         readOnlyProperties = new HashSet<String>();
         readOnlyProperties.add("name");
+        readOnlyProperties.add("actionId");
         invisibleProperties = new HashSet<String>();
     	invisibleProperties.add("id");
     	invisibleProperties.add("version");
-        invisibleProperties.add("actionId");
         invisibleProperties.add("startTime");
         invisibleProperties.add("endTime");
         invisibleProperties.add("duration");

@@ -24,6 +24,7 @@ import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
+import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
 
@@ -50,6 +51,8 @@ public class TestResultVisitor extends DatatypeVisitor {
 			this.visit((MessageTrace) datatype);
 		} else if (datatype instanceof ScreenshotTrace) {
 			this.visit((ScreenshotTrace) datatype);
+		} else if (datatype instanceof FileTrace) {
+			this.visit((FileTrace) datatype);
 		} else if (datatype instanceof ActionTrace) {
 			this.visit((ActionTrace) datatype);
 		}
@@ -72,6 +75,9 @@ public class TestResultVisitor extends DatatypeVisitor {
 	}
 	
 	protected void visit(ScreenshotTrace datatype) {
+	}
+
+	protected void visit(FileTrace datatype) {
 	}
 	
 	protected void visit(ActionTrace datatype) {

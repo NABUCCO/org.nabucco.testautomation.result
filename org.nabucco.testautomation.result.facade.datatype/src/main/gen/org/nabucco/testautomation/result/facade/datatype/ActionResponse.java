@@ -3,11 +3,18 @@
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.Datatype;
-import org.nabucco.framework.base.facade.datatype.property.DatatypeProperty;
-import org.nabucco.framework.base.facade.datatype.property.EnumProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
+import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
+import org.nabucco.testautomation.facade.datatype.base.Text;
 import org.nabucco.testautomation.facade.datatype.property.PropertyList;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
@@ -22,10 +29,18 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "actionStatus", "returnProperties",
-            "actionTrace" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m0,1;", "m0,1;", "l0,n;m0,1;",
+            "l0,10000;m0,1;" };
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m0,1;", "m0,1;" };
+    public static final String ACTIONSTATUS = "actionStatus";
+
+    public static final String RETURNPROPERTIES = "returnProperties";
+
+    public static final String ACTIONTRACE = "actionTrace";
+
+    public static final String MESSAGE = "message";
+
+    public static final String ERRORMESSAGE = "errorMessage";
 
     private ActionStatusType actionStatus;
 
@@ -34,6 +49,10 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
     private Long returnPropertiesRefId;
 
     private ActionTrace actionTrace;
+
+    private Text message;
+
+    private ErrorMessage errorMessage;
 
     /** Constructs a new ActionResponse instance. */
     public ActionResponse() {
@@ -62,6 +81,36 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
         if ((this.getActionTrace() != null)) {
             clone.setActionTrace(this.getActionTrace().cloneObject());
         }
+        if ((this.getMessage() != null)) {
+            clone.setMessage(this.getMessage().cloneObject());
+        }
+        if ((this.getErrorMessage() != null)) {
+            clone.setErrorMessage(this.getErrorMessage().cloneObject());
+        }
+    }
+
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(TestScriptElementResult.class)
+                .getPropertyMap());
+        propertyMap.put(ACTIONSTATUS, PropertyDescriptorSupport.createEnumeration(ACTIONSTATUS,
+                ActionStatusType.class, 4, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(RETURNPROPERTIES, PropertyDescriptorSupport.createDatatype(
+                RETURNPROPERTIES, PropertyList.class, 5, PROPERTY_CONSTRAINTS[1], false,
+                PropertyAssociationType.COMPONENT));
+        propertyMap.put(ACTIONTRACE, PropertyDescriptorSupport.createDatatype(ACTIONTRACE,
+                ActionTrace.class, 6, PROPERTY_CONSTRAINTS[2], false,
+                PropertyAssociationType.COMPOSITION));
+        propertyMap.put(MESSAGE, PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 7,
+                PROPERTY_CONSTRAINTS[3], false));
+        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE,
+                ErrorMessage.class, 8, PROPERTY_CONSTRAINTS[4], false));
+        return new NabuccoPropertyContainer(propertyMap);
     }
 
     @Override
@@ -70,15 +119,43 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
     }
 
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new EnumProperty<ActionStatusType>(PROPERTY_NAMES[0],
-                ActionStatusType.class, PROPERTY_CONSTRAINTS[0], this.actionStatus));
-        properties.add(new DatatypeProperty<PropertyList>(PROPERTY_NAMES[1], PropertyList.class,
-                PROPERTY_CONSTRAINTS[1], this.returnProperties));
-        properties.add(new DatatypeProperty<ActionTrace>(PROPERTY_NAMES[2], ActionTrace.class,
-                PROPERTY_CONSTRAINTS[2], this.actionTrace));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONSTATUS),
+                this.actionStatus, null));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(RETURNPROPERTIES),
+                this.returnProperties, this.returnPropertiesRefId));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONTRACE),
+                this.actionTrace, null));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(MESSAGE),
+                this.message, null));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ERRORMESSAGE),
+                this.errorMessage, null));
         return properties;
+    }
+
+    @Override
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(ACTIONSTATUS) && (property.getType() == ActionStatusType.class))) {
+            this.setActionStatus(((ActionStatusType) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(RETURNPROPERTIES) && (property.getType() == PropertyList.class))) {
+            this.setReturnProperties(((PropertyList) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(ACTIONTRACE) && (property.getType() == ActionTrace.class))) {
+            this.setActionTrace(((ActionTrace) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(MESSAGE) && (property.getType() == Text.class))) {
+            this.setMessage(((Text) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == ErrorMessage.class))) {
+            this.setErrorMessage(((ErrorMessage) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -116,6 +193,16 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
                 return false;
         } else if ((!this.actionTrace.equals(other.actionTrace)))
             return false;
+        if ((this.message == null)) {
+            if ((other.message != null))
+                return false;
+        } else if ((!this.message.equals(other.message)))
+            return false;
+        if ((this.errorMessage == null)) {
+            if ((other.errorMessage != null))
+                return false;
+        } else if ((!this.errorMessage.equals(other.errorMessage)))
+            return false;
         return true;
     }
 
@@ -130,22 +217,10 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
         result = ((PRIME * result) + ((this.returnPropertiesRefId == null) ? 0
                 : this.returnPropertiesRefId.hashCode()));
         result = ((PRIME * result) + ((this.actionTrace == null) ? 0 : this.actionTrace.hashCode()));
+        result = ((PRIME * result) + ((this.message == null) ? 0 : this.message.hashCode()));
+        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage
+                .hashCode()));
         return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<ActionResponse>\n");
-        appendable.append(super.toString());
-        appendable.append((("<actionStatus>" + this.actionStatus) + "</actionStatus>\n"));
-        appendable
-                .append((("<returnProperties>" + this.returnProperties) + "</returnProperties>\n"));
-        appendable
-                .append((("<returnPropertiesRefId>" + this.returnPropertiesRefId) + "</returnPropertiesRefId>\n"));
-        appendable.append((("<actionTrace>" + this.actionTrace) + "</actionTrace>\n"));
-        appendable.append("</ActionResponse>\n");
-        return appendable.toString();
     }
 
     @Override
@@ -243,5 +318,90 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
      */
     public ActionTrace getActionTrace() {
         return this.actionTrace;
+    }
+
+    /**
+     * Missing description at method getMessage.
+     *
+     * @return the Text.
+     */
+    public Text getMessage() {
+        return this.message;
+    }
+
+    /**
+     * Missing description at method setMessage.
+     *
+     * @param message the Text.
+     */
+    public void setMessage(Text message) {
+        this.message = message;
+    }
+
+    /**
+     * Missing description at method setMessage.
+     *
+     * @param message the String.
+     */
+    public void setMessage(String message) {
+        if ((this.message == null)) {
+            if ((message == null)) {
+                return;
+            }
+            this.message = new Text();
+        }
+        this.message.setValue(message);
+    }
+
+    /**
+     * Missing description at method getErrorMessage.
+     *
+     * @return the ErrorMessage.
+     */
+    public ErrorMessage getErrorMessage() {
+        return this.errorMessage;
+    }
+
+    /**
+     * Missing description at method setErrorMessage.
+     *
+     * @param errorMessage the ErrorMessage.
+     */
+    public void setErrorMessage(ErrorMessage errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    /**
+     * Missing description at method setErrorMessage.
+     *
+     * @param errorMessage the String.
+     */
+    public void setErrorMessage(String errorMessage) {
+        if ((this.errorMessage == null)) {
+            if ((errorMessage == null)) {
+                return;
+            }
+            this.errorMessage = new ErrorMessage();
+        }
+        this.errorMessage.setValue(errorMessage);
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(ActionResponse.class).getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(ActionResponse.class).getAllProperties();
     }
 }

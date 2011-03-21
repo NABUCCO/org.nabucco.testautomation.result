@@ -3,13 +3,20 @@
  */
 package org.nabucco.testautomation.result.facade.message.jira;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.nabucco.framework.base.facade.datatype.code.Code;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
+import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
 import org.nabucco.framework.base.facade.datatype.issuetracking.Issue;
-import org.nabucco.framework.base.facade.datatype.property.DatatypeProperty;
-import org.nabucco.framework.base.facade.datatype.property.ListProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
+import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
+import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
+import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
+import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
 import org.nabucco.framework.base.facade.message.ServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceMessageSupport;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
@@ -24,14 +31,19 @@ public class IssueMsg extends ServiceMessageSupport implements ServiceMessage {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_NAMES = { "issue", "testResults", "environmentType",
-            "releaseType" };
-
     private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m0,n;", "m0,1;", "m0,1;" };
+
+    public static final String ISSUE = "issue";
+
+    public static final String TESTRESULTS = "testResults";
+
+    public static final String ENVIRONMENTTYPE = "environmentType";
+
+    public static final String RELEASETYPE = "releaseType";
 
     private Issue issue;
 
-    private List<TestResult> testResults;
+    private NabuccoList<TestResult> testResults;
 
     private Code environmentType;
 
@@ -42,18 +54,58 @@ public class IssueMsg extends ServiceMessageSupport implements ServiceMessage {
         super();
     }
 
+    /**
+     * CreatePropertyContainer.
+     *
+     * @return the NabuccoPropertyContainer.
+     */
+    protected static NabuccoPropertyContainer createPropertyContainer() {
+        Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.put(ISSUE, PropertyDescriptorSupport.createDatatype(ISSUE, Issue.class, 0,
+                PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.COMPONENT));
+        propertyMap.put(TESTRESULTS, PropertyDescriptorSupport.createCollection(TESTRESULTS,
+                TestResult.class, 1, PROPERTY_CONSTRAINTS[1], false,
+                PropertyAssociationType.COMPOSITION));
+        propertyMap.put(ENVIRONMENTTYPE, PropertyDescriptorSupport.createDatatype(ENVIRONMENTTYPE,
+                Code.class, 2, PROPERTY_CONSTRAINTS[2], false, PropertyAssociationType.COMPONENT));
+        propertyMap.put(RELEASETYPE, PropertyDescriptorSupport.createDatatype(RELEASETYPE,
+                Code.class, 3, PROPERTY_CONSTRAINTS[3], false, PropertyAssociationType.COMPONENT));
+        return new NabuccoPropertyContainer(propertyMap);
+    }
+
     @Override
-    public List<NabuccoProperty<?>> getProperties() {
-        List<NabuccoProperty<?>> properties = super.getProperties();
-        properties.add(new DatatypeProperty<Issue>(PROPERTY_NAMES[0], Issue.class,
-                PROPERTY_CONSTRAINTS[0], this.issue));
-        properties.add(new ListProperty<TestResult>(PROPERTY_NAMES[1], TestResult.class,
-                PROPERTY_CONSTRAINTS[1], this.testResults));
-        properties.add(new DatatypeProperty<Code>(PROPERTY_NAMES[2], Code.class,
-                PROPERTY_CONSTRAINTS[2], this.environmentType));
-        properties.add(new DatatypeProperty<Code>(PROPERTY_NAMES[3], Code.class,
-                PROPERTY_CONSTRAINTS[3], this.releaseType));
+    public List<NabuccoProperty> getProperties() {
+        List<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(IssueMsg.getPropertyDescriptor(ISSUE), this.issue));
+        properties.add(super.createProperty(IssueMsg.getPropertyDescriptor(TESTRESULTS),
+                this.testResults));
+        properties.add(super.createProperty(IssueMsg.getPropertyDescriptor(ENVIRONMENTTYPE),
+                this.environmentType));
+        properties.add(super.createProperty(IssueMsg.getPropertyDescriptor(RELEASETYPE),
+                this.releaseType));
         return properties;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean setProperty(NabuccoProperty property) {
+        if (super.setProperty(property)) {
+            return true;
+        }
+        if ((property.getName().equals(ISSUE) && (property.getType() == Issue.class))) {
+            this.setIssue(((Issue) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(TESTRESULTS) && (property.getType() == TestResult.class))) {
+            this.testResults = ((NabuccoList<TestResult>) property.getInstance());
+            return true;
+        } else if ((property.getName().equals(ENVIRONMENTTYPE) && (property.getType() == Code.class))) {
+            this.setEnvironmentType(((Code) property.getInstance()));
+            return true;
+        } else if ((property.getName().equals(RELEASETYPE) && (property.getType() == Code.class))) {
+            this.setReleaseType(((Code) property.getInstance()));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -107,19 +159,6 @@ public class IssueMsg extends ServiceMessageSupport implements ServiceMessage {
     }
 
     @Override
-    public String toString() {
-        StringBuilder appendable = new StringBuilder();
-        appendable.append("<IssueMsg>\n");
-        appendable.append(super.toString());
-        appendable.append((("<issue>" + this.issue) + "</issue>\n"));
-        appendable.append((("<testResults>" + this.testResults) + "</testResults>\n"));
-        appendable.append((("<environmentType>" + this.environmentType) + "</environmentType>\n"));
-        appendable.append((("<releaseType>" + this.releaseType) + "</releaseType>\n"));
-        appendable.append("</IssueMsg>\n");
-        return appendable.toString();
-    }
-
-    @Override
     public ServiceMessage cloneObject() {
         return this;
     }
@@ -145,11 +184,11 @@ public class IssueMsg extends ServiceMessageSupport implements ServiceMessage {
     /**
      * Missing description at method getTestResults.
      *
-     * @return the List<TestResult>.
+     * @return the NabuccoList<TestResult>.
      */
-    public List<TestResult> getTestResults() {
+    public NabuccoList<TestResult> getTestResults() {
         if ((this.testResults == null)) {
-            this.testResults = new ArrayList<TestResult>();
+            this.testResults = new NabuccoListImpl<TestResult>(NabuccoCollectionState.INITIALIZED);
         }
         return this.testResults;
     }
@@ -188,5 +227,24 @@ public class IssueMsg extends ServiceMessageSupport implements ServiceMessage {
      */
     public void setReleaseType(Code releaseType) {
         this.releaseType = releaseType;
+    }
+
+    /**
+     * Getter for the PropertyDescriptor.
+     *
+     * @param propertyName the String.
+     * @return the NabuccoPropertyDescriptor.
+     */
+    public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
+        return PropertyCache.getInstance().retrieve(IssueMsg.class).getProperty(propertyName);
+    }
+
+    /**
+     * Getter for the PropertyDescriptorList.
+     *
+     * @return the List<NabuccoPropertyDescriptor>.
+     */
+    public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
+        return PropertyCache.getInstance().retrieve(IssueMsg.class).getAllProperties();
     }
 }

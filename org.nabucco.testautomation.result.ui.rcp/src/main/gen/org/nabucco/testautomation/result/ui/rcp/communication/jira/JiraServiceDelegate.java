@@ -16,6 +16,7 @@ import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.PriorityListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.ProjectMsg;
+import org.nabucco.testautomation.result.facade.message.jira.VersionListMsg;
 import org.nabucco.testautomation.result.facade.service.jira.JiraService;
 
 /**
@@ -218,5 +219,36 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
             }
         }
         throw new ClientException("Cannot execute service operation: JiraService.createIssues");
+    }
+
+    /**
+     * Getter for the VersionsOfProject.
+     *
+     * @param rq the ProjectMsg.
+     * @return the VersionListMsg.
+     * @throws ClientException
+     */
+    public VersionListMsg getVersionsOfProject(ProjectMsg rq) throws ClientException {
+        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(
+                super.createServiceContext());
+        request.setRequestMessage(rq);
+        ServiceResponse<VersionListMsg> rs;
+        if ((service != null)) {
+            long start = System.currentTimeMillis();
+            try {
+                rs = service.getVersionsOfProject(request);
+                return rs.getResponseMessage();
+            } catch (Exception exception) {
+                super.processException(exception);
+            } finally {
+                long end = System.currentTimeMillis();
+                Activator.getDefault().logDebug(
+                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
+                                "JiraService.getVersionsOfProject", " Time: ", String
+                                        .valueOf((end - start)), "ms."));
+            }
+        }
+        throw new ClientException(
+                "Cannot execute service operation: JiraService.getVersionsOfProject");
     }
 }

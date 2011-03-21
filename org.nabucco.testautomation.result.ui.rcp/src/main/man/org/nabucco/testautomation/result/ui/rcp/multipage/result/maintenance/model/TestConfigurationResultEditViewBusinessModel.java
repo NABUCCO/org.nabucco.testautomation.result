@@ -1,19 +1,19 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2010 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco-source.org/nabucco-license.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.model;
 
 import org.nabucco.framework.base.facade.datatype.Identifier;
@@ -28,9 +28,12 @@ import org.nabucco.testautomation.result.ui.rcp.communication.ResultComponentSer
 import org.nabucco.testautomation.result.ui.rcp.communication.maintain.MaintainTestConfigurationResultDelegate;
 import org.nabucco.testautomation.result.ui.rcp.communication.search.SearchTestConfigurationResultDelegate;
 
-
-public class TestConfigurationResultEditViewBusinessModel implements
-		BusinessModel, Loggable {
+/**
+ * TestConfigurationResultEditViewBusinessModel
+ * 
+ * @author Markus Jorroch, PRODYNA AG
+ */
+public class TestConfigurationResultEditViewBusinessModel implements BusinessModel, Loggable {
 
 	public static String ID = "org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.model.TestConfigurationResultEditViewBusinessModel";
 
@@ -42,16 +45,16 @@ public class TestConfigurationResultEditViewBusinessModel implements
 	public TestConfigurationResult readTestConfigurationResult(
 			TestConfigurationResult testConfigurationResult) {
 		ResultComponentServiceDelegateFactory resultComponentServiceDelegateFactory = ResultComponentServiceDelegateFactory
-				.getInstance();
+		.getInstance();
 		try {
 			SearchTestConfigurationResultDelegate searchTestConfigurationResult = resultComponentServiceDelegateFactory
-					.getSearchTestConfigurationResult();
+			.getSearchTestConfigurationResult();
 
 			TestConfigurationResultSearchMsg rq = new TestConfigurationResultSearchMsg();
 			rq.setId(new Identifier(testConfigurationResult.getId()));
 
 			TestConfigurationResultMsg response = searchTestConfigurationResult
-					.getTestConfigurationResult(rq);
+			.getTestConfigurationResult(rq);
 			return response.getTestConfigurationResult();
 		} catch (ClientException e) {
 			Activator.getDefault().logError(e);
@@ -64,15 +67,15 @@ public class TestConfigurationResultEditViewBusinessModel implements
 			throws ClientException {
 
 		ResultComponentServiceDelegateFactory resultComponentServiceDelegateFactory = ResultComponentServiceDelegateFactory
-				.getInstance();
+		.getInstance();
 		MaintainTestConfigurationResultDelegate maintainTestConfigurationResult = resultComponentServiceDelegateFactory
-				.getMaintainTestConfigurationResult();
+		.getMaintainTestConfigurationResult();
 
 		TestConfigurationResultMsg rq = new TestConfigurationResultMsg();
 		rq.setTestConfigurationResult(testConfigurationResult);
 
 		TestConfigurationResultMsg response = maintainTestConfigurationResult
-				.maintainTestConfigurationResult(rq);
+		.maintainTestConfigurationResult(rq);
 		return response.getTestConfigurationResult();
 	}
 
@@ -86,10 +89,10 @@ public class TestConfigurationResultEditViewBusinessModel implements
 	public void delete(TestConfigurationResult testConfigResult)
 			throws ClientException {
 		ResultComponentServiceDelegateFactory resultComponent = ResultComponentServiceDelegateFactory
-				.getInstance();
+		.getInstance();
 
 		MaintainTestConfigurationResultDelegate maintainDelegate = resultComponent
-				.getMaintainTestConfigurationResult();
+		.getMaintainTestConfigurationResult();
 
 		TestConfigurationResultMsg rq = new TestConfigurationResultMsg();
 		rq.setTestConfigurationResult(testConfigResult);

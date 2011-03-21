@@ -3,7 +3,7 @@
  */
 package org.nabucco.testautomation.result.ui.web.communication.produce;
 
-import org.nabucco.framework.base.facade.datatype.security.Subject;
+import org.nabucco.framework.base.facade.datatype.session.NabuccoSession;
 import org.nabucco.framework.base.facade.exception.service.ProduceException;
 import org.nabucco.framework.base.facade.message.EmptyServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceRequest;
@@ -35,36 +35,15 @@ public class ProduceTestResultDelegate extends ServiceDelegateSupport {
     /**
      * ProduceTestResult.
      *
+     * @param session the NabuccoSession.
      * @param rq the EmptyServiceMessage.
      * @return the TestResultMsg.
      * @throws ProduceException
      */
-    public TestResultMsg produceTestResult(EmptyServiceMessage rq) throws ProduceException {
-        ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TestResultMsg> rs;
-        if ((service != null)) {
-            rs = service.produceTestResult(request);
-        } else {
-            throw new ProduceException(
-                    "Cannot execute service operation: ProduceTestResult.produceTestResult");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * ProduceTestResult.
-     *
-     * @param subject the Subject.
-     * @param rq the EmptyServiceMessage.
-     * @return the TestResultMsg.
-     * @throws ProduceException
-     */
-    public TestResultMsg produceTestResult(EmptyServiceMessage rq, Subject subject)
+    public TestResultMsg produceTestResult(EmptyServiceMessage rq, NabuccoSession session)
             throws ProduceException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TestResultMsg> rs;
         if ((service != null)) {

@@ -18,7 +18,10 @@ package org.nabucco.testautomation.result.impl.service.search;
 
 import javax.persistence.Query;
 
+import org.nabucco.framework.base.facade.component.NabuccoInstance;
 import org.nabucco.framework.base.facade.datatype.DatatypeState;
+import org.nabucco.framework.base.facade.datatype.validation.constraint.element.ConstraintFactory;
+import org.nabucco.framework.base.facade.datatype.visitor.VisitorException;
 import org.nabucco.framework.base.facade.exception.service.SearchException;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
@@ -61,6 +64,17 @@ public class GetTestConfigurationResultServiceHandlerImpl extends
 		}
 		
 		load(result);
+		
+		// Check owner and set Editable-Constraint
+		if (!result.getOwner().equals(NabuccoInstance.getInstance().getOwner())) {
+			try {
+				result.addConstraint(ConstraintFactory.getInstance()
+						.createEditableConstraint(false), true);
+			} catch (VisitorException ex) {
+				throw new SearchException(ex);
+			}
+		}
+		
 		TestConfigurationResultMsg rs = new TestConfigurationResultMsg();
 		rs.setTestConfigurationResult(result);
 		return rs;

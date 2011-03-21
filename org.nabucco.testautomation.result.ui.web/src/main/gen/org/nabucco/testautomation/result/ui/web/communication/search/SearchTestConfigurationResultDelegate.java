@@ -3,7 +3,7 @@
  */
 package org.nabucco.testautomation.result.ui.web.communication.search;
 
-import org.nabucco.framework.base.facade.datatype.security.Subject;
+import org.nabucco.framework.base.facade.datatype.session.NabuccoSession;
 import org.nabucco.framework.base.facade.exception.service.SearchException;
 import org.nabucco.framework.base.facade.message.ServiceRequest;
 import org.nabucco.framework.base.facade.message.ServiceResponse;
@@ -36,37 +36,15 @@ public class SearchTestConfigurationResultDelegate extends ServiceDelegateSuppor
     /**
      * SearchTestConfigurationResult.
      *
+     * @param session the NabuccoSession.
      * @param rq the TestConfigurationResultSearchMsg.
      * @return the TestConfigurationResultListMsg.
      * @throws SearchException
      */
     public TestConfigurationResultListMsg searchTestConfigurationResult(
-            TestConfigurationResultSearchMsg rq) throws SearchException {
+            TestConfigurationResultSearchMsg rq, NabuccoSession session) throws SearchException {
         ServiceRequest<TestConfigurationResultSearchMsg> request = new ServiceRequest<TestConfigurationResultSearchMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TestConfigurationResultListMsg> rs;
-        if ((service != null)) {
-            rs = service.searchTestConfigurationResult(request);
-        } else {
-            throw new SearchException(
-                    "Cannot execute service operation: SearchTestConfigurationResult.searchTestConfigurationResult");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * SearchTestConfigurationResult.
-     *
-     * @param subject the Subject.
-     * @param rq the TestConfigurationResultSearchMsg.
-     * @return the TestConfigurationResultListMsg.
-     * @throws SearchException
-     */
-    public TestConfigurationResultListMsg searchTestConfigurationResult(
-            TestConfigurationResultSearchMsg rq, Subject subject) throws SearchException {
-        ServiceRequest<TestConfigurationResultSearchMsg> request = new ServiceRequest<TestConfigurationResultSearchMsg>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TestConfigurationResultListMsg> rs;
         if ((service != null)) {
@@ -81,37 +59,15 @@ public class SearchTestConfigurationResultDelegate extends ServiceDelegateSuppor
     /**
      * Getter for the TestConfigurationResult.
      *
-     * @param rq the TestConfigurationResultSearchMsg.
-     * @return the TestConfigurationResultMsg.
-     * @throws SearchException
-     */
-    public TestConfigurationResultMsg getTestConfigurationResult(TestConfigurationResultSearchMsg rq)
-            throws SearchException {
-        ServiceRequest<TestConfigurationResultSearchMsg> request = new ServiceRequest<TestConfigurationResultSearchMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<TestConfigurationResultMsg> rs;
-        if ((service != null)) {
-            rs = service.getTestConfigurationResult(request);
-        } else {
-            throw new SearchException(
-                    "Cannot execute service operation: SearchTestConfigurationResult.getTestConfigurationResult");
-        }
-        return rs.getResponseMessage();
-    }
-
-    /**
-     * Getter for the TestConfigurationResult.
-     *
-     * @param subject the Subject.
+     * @param session the NabuccoSession.
      * @param rq the TestConfigurationResultSearchMsg.
      * @return the TestConfigurationResultMsg.
      * @throws SearchException
      */
     public TestConfigurationResultMsg getTestConfigurationResult(
-            TestConfigurationResultSearchMsg rq, Subject subject) throws SearchException {
+            TestConfigurationResultSearchMsg rq, NabuccoSession session) throws SearchException {
         ServiceRequest<TestConfigurationResultSearchMsg> request = new ServiceRequest<TestConfigurationResultSearchMsg>(
-                super.createServiceContext(subject));
+                super.createServiceContext(session));
         request.setRequestMessage(rq);
         ServiceResponse<TestConfigurationResultMsg> rs;
         if ((service != null)) {
