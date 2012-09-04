@@ -1,15 +1,27 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.component;
 
 import org.nabucco.framework.base.facade.component.Component;
 import org.nabucco.framework.base.facade.exception.service.ServiceException;
 import org.nabucco.testautomation.result.facade.service.jira.JiraService;
-import org.nabucco.testautomation.result.facade.service.maintain.MaintainTestConfigurationResult;
-import org.nabucco.testautomation.result.facade.service.produce.ProduceTestResult;
-import org.nabucco.testautomation.result.facade.service.produce.ProduceTrace;
-import org.nabucco.testautomation.result.facade.service.search.SearchTestConfigurationResult;
+import org.nabucco.testautomation.result.facade.service.maintain.MaintainResult;
+import org.nabucco.testautomation.result.facade.service.produce.ProduceResult;
+import org.nabucco.testautomation.result.facade.service.report.ReportResult;
+import org.nabucco.testautomation.result.facade.service.resolve.ResolveResult;
+import org.nabucco.testautomation.result.facade.service.search.SearchResult;
 
 /**
  * ResultComponent<p/>Component for testautomation result<p/>
@@ -21,37 +33,49 @@ public interface ResultComponent extends Component {
 
     final String COMPONENT_NAME = "org.nabucco.testautomation.result";
 
-    /**
-     * Getter for the MaintainTestConfigurationResult.
-     *
-     * @return the MaintainTestConfigurationResult.
-     * @throws ServiceException
-     */
-    MaintainTestConfigurationResult getMaintainTestConfigurationResult() throws ServiceException;
+    final String COMPONENT_PREFIX = "rslt";
+
+    final String JNDI_NAME = ((((JNDI_PREFIX + "/") + COMPONENT_NAME) + "/") + "org.nabucco.testautomation.result.facade.component.ResultComponent");
 
     /**
-     * Getter for the SearchTestConfigurationResult.
+     * Getter for the MaintainResult.
      *
-     * @return the SearchTestConfigurationResult.
+     * @return the MaintainResult.
      * @throws ServiceException
      */
-    SearchTestConfigurationResult getSearchTestConfigurationResult() throws ServiceException;
+    MaintainResult getMaintainResult() throws ServiceException;
 
     /**
-     * Getter for the ProduceTestResult.
+     * Getter for the SearchResult.
      *
-     * @return the ProduceTestResult.
+     * @return the SearchResult.
      * @throws ServiceException
      */
-    ProduceTestResult getProduceTestResult() throws ServiceException;
+    SearchResult getSearchResult() throws ServiceException;
 
     /**
-     * Getter for the ProduceTrace.
+     * Getter for the ResolveResult.
      *
-     * @return the ProduceTrace.
+     * @return the ResolveResult.
      * @throws ServiceException
      */
-    ProduceTrace getProduceTrace() throws ServiceException;
+    ResolveResult getResolveResult() throws ServiceException;
+
+    /**
+     * Getter for the ReportResult.
+     *
+     * @return the ReportResult.
+     * @throws ServiceException
+     */
+    ReportResult getReportResult() throws ServiceException;
+
+    /**
+     * Getter for the ProduceResult.
+     *
+     * @return the ProduceResult.
+     * @throws ServiceException
+     */
+    ProduceResult getProduceResult() throws ServiceException;
 
     /**
      * Getter for the JiraService.

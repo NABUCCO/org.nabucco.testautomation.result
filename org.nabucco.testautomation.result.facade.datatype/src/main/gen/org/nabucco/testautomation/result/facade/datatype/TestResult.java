@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.Flag;
@@ -18,16 +30,15 @@ import org.nabucco.framework.base.facade.datatype.code.CodePath;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
+import org.nabucco.framework.base.facade.datatype.date.Date;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
 import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
 import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
 import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
-import org.nabucco.testautomation.facade.datatype.base.HierarchyLevelType;
-import org.nabucco.testautomation.facade.datatype.base.Text;
+import org.nabucco.testautomation.property.facade.datatype.base.HierarchyLevelType;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
 import org.nabucco.testautomation.result.facade.datatype.status.TestConfigElementStatusType;
@@ -41,9 +52,9 @@ public class TestResult extends NabuccoDatatype implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m1,1;", "m0,1;",
-            "l0,255;m1,1;", "l0,16;m0,1;", "l0,255;m1,1;", "l0,n;m1,1;", "l0,n;m1,1;",
-            "l0,n;m0,1;", "l0,n;m0,1;", "l0,n;m0,1;", "l0,n;m0,1;", "l0,10000;m0,1;", "l0,n;m1,1;",
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m1,1;", "m0,1;", "l0,255;u0,n;m1,1;",
+            "l0,16;u0,n;m0,1;", "l0,255;u0,n;m1,1;", "l0,n;u0,n;m1,1;", "l0,n;u0,n;m1,1;", "l0,n;u0,n;m0,1;",
+            "l0,n;u0,n;m0,1;", "l0,n;u0,n;m0,1;", "l0,10000;u0,n;m0,1;", "l0,100000;u0,n;m0,1;", "l0,n;u0,n;m1,1;",
             "m0,n;", "m0,n;" };
 
     public static final String LEVEL = "level";
@@ -86,7 +97,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
 
     private Long brandTypeRefId;
 
-    private static final String BRANDTYPE_CODEPATH = "nabucco.testautomation.brand";
+    protected static final String BRANDTYPE_CODEPATH = "nabucco.testautomation.brand";
 
     private Name name;
 
@@ -98,15 +109,15 @@ public class TestResult extends NabuccoDatatype implements Datatype {
 
     private Identifier schemaElementId;
 
-    private DateValue startTime;
+    private Date startTime;
 
-    private DateValue endTime;
+    private Date endTime;
 
     private Duration duration;
 
-    private Text message;
+    private LongText message;
 
-    private ErrorMessage errorMessage;
+    private LongText errorMessage;
 
     private Flag jiraExport;
 
@@ -187,8 +198,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     List<TestResultContainer> getTestResultListJPA() {
         if ((this.testResultList == null)) {
-            this.testResultList = new NabuccoListImpl<TestResultContainer>(
-                    NabuccoCollectionState.LAZY);
+            this.testResultList = new NabuccoListImpl<TestResultContainer>(NabuccoCollectionState.LAZY);
         }
         return ((NabuccoListImpl<TestResultContainer>) this.testResultList).getDelegate();
     }
@@ -200,8 +210,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     void setTestResultListJPA(List<TestResultContainer> testResultList) {
         if ((this.testResultList == null)) {
-            this.testResultList = new NabuccoListImpl<TestResultContainer>(
-                    NabuccoCollectionState.LAZY);
+            this.testResultList = new NabuccoListImpl<TestResultContainer>(NabuccoCollectionState.LAZY);
         }
         ((NabuccoListImpl<TestResultContainer>) this.testResultList).setDelegate(testResultList);
     }
@@ -213,8 +222,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     List<TestScriptResult> getTestScriptResultListJPA() {
         if ((this.testScriptResultList == null)) {
-            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(
-                    NabuccoCollectionState.LAZY);
+            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(NabuccoCollectionState.LAZY);
         }
         return ((NabuccoListImpl<TestScriptResult>) this.testScriptResultList).getDelegate();
     }
@@ -226,11 +234,9 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     void setTestScriptResultListJPA(List<TestScriptResult> testScriptResultList) {
         if ((this.testScriptResultList == null)) {
-            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(
-                    NabuccoCollectionState.LAZY);
+            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(NabuccoCollectionState.LAZY);
         }
-        ((NabuccoListImpl<TestScriptResult>) this.testScriptResultList)
-                .setDelegate(testScriptResultList);
+        ((NabuccoListImpl<TestScriptResult>) this.testScriptResultList).setDelegate(testScriptResultList);
     }
 
     /**
@@ -240,42 +246,40 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class)
-                .getPropertyMap());
-        propertyMap.put(LEVEL, PropertyDescriptorSupport.createEnumeration(LEVEL,
-                HierarchyLevelType.class, 2, PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(STATUS, PropertyDescriptorSupport.createEnumeration(STATUS,
-                TestConfigElementStatusType.class, 3, PROPERTY_CONSTRAINTS[1], false));
-        propertyMap.put(BRANDTYPE, PropertyDescriptorSupport.createDatatype(BRANDTYPE, Code.class,
-                4, PROPERTY_CONSTRAINTS[2], false, PropertyAssociationType.COMPONENT));
-        propertyMap.put(NAME, PropertyDescriptorSupport.createBasetype(NAME, Name.class, 5,
-                PROPERTY_CONSTRAINTS[3], false));
-        propertyMap.put(TESTCONFIGELEMENTKEY, PropertyDescriptorSupport.createBasetype(
-                TESTCONFIGELEMENTKEY, Key.class, 6, PROPERTY_CONSTRAINTS[4], false));
-        propertyMap.put(TESTCONFIGELEMENTNAME, PropertyDescriptorSupport.createBasetype(
-                TESTCONFIGELEMENTNAME, Name.class, 7, PROPERTY_CONSTRAINTS[5], false));
-        propertyMap.put(TESTCONFIGELEMENTID, PropertyDescriptorSupport.createBasetype(
-                TESTCONFIGELEMENTID, Identifier.class, 8, PROPERTY_CONSTRAINTS[6], false));
-        propertyMap.put(SCHEMAELEMENTID, PropertyDescriptorSupport.createBasetype(SCHEMAELEMENTID,
-                Identifier.class, 9, PROPERTY_CONSTRAINTS[7], false));
-        propertyMap.put(STARTTIME, PropertyDescriptorSupport.createBasetype(STARTTIME,
-                DateValue.class, 10, PROPERTY_CONSTRAINTS[8], false));
-        propertyMap.put(ENDTIME, PropertyDescriptorSupport.createBasetype(ENDTIME, DateValue.class,
-                11, PROPERTY_CONSTRAINTS[9], false));
-        propertyMap.put(DURATION, PropertyDescriptorSupport.createBasetype(DURATION,
-                Duration.class, 12, PROPERTY_CONSTRAINTS[10], false));
-        propertyMap.put(MESSAGE, PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 13,
-                PROPERTY_CONSTRAINTS[11], false));
-        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE,
-                ErrorMessage.class, 14, PROPERTY_CONSTRAINTS[12], false));
-        propertyMap.put(JIRAEXPORT, PropertyDescriptorSupport.createBasetype(JIRAEXPORT,
-                Flag.class, 15, PROPERTY_CONSTRAINTS[13], false));
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class).getPropertyMap());
+        propertyMap.put(LEVEL, PropertyDescriptorSupport.createEnumeration(LEVEL, HierarchyLevelType.class, 3,
+                PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(STATUS, PropertyDescriptorSupport.createEnumeration(STATUS, TestConfigElementStatusType.class,
+                4, PROPERTY_CONSTRAINTS[1], false));
+        propertyMap.put(BRANDTYPE, PropertyDescriptorSupport.createDatatype(BRANDTYPE, Code.class, 5,
+                PROPERTY_CONSTRAINTS[2], false, PropertyAssociationType.COMPONENT, BRANDTYPE_CODEPATH));
+        propertyMap.put(NAME,
+                PropertyDescriptorSupport.createBasetype(NAME, Name.class, 6, PROPERTY_CONSTRAINTS[3], false));
+        propertyMap.put(TESTCONFIGELEMENTKEY, PropertyDescriptorSupport.createBasetype(TESTCONFIGELEMENTKEY, Key.class,
+                7, PROPERTY_CONSTRAINTS[4], false));
+        propertyMap.put(TESTCONFIGELEMENTNAME, PropertyDescriptorSupport.createBasetype(TESTCONFIGELEMENTNAME,
+                Name.class, 8, PROPERTY_CONSTRAINTS[5], false));
+        propertyMap.put(TESTCONFIGELEMENTID, PropertyDescriptorSupport.createBasetype(TESTCONFIGELEMENTID,
+                Identifier.class, 9, PROPERTY_CONSTRAINTS[6], false));
+        propertyMap.put(SCHEMAELEMENTID, PropertyDescriptorSupport.createBasetype(SCHEMAELEMENTID, Identifier.class,
+                10, PROPERTY_CONSTRAINTS[7], false));
+        propertyMap.put(STARTTIME,
+                PropertyDescriptorSupport.createBasetype(STARTTIME, Date.class, 11, PROPERTY_CONSTRAINTS[8], false));
+        propertyMap.put(ENDTIME,
+                PropertyDescriptorSupport.createBasetype(ENDTIME, Date.class, 12, PROPERTY_CONSTRAINTS[9], false));
+        propertyMap
+                .put(DURATION, PropertyDescriptorSupport.createBasetype(DURATION, Duration.class, 13,
+                        PROPERTY_CONSTRAINTS[10], false));
+        propertyMap.put(MESSAGE,
+                PropertyDescriptorSupport.createBasetype(MESSAGE, LongText.class, 14, PROPERTY_CONSTRAINTS[11], false));
+        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE, LongText.class, 15,
+                PROPERTY_CONSTRAINTS[12], false));
+        propertyMap.put(JIRAEXPORT,
+                PropertyDescriptorSupport.createBasetype(JIRAEXPORT, Flag.class, 16, PROPERTY_CONSTRAINTS[13], false));
         propertyMap.put(TESTRESULTLIST, PropertyDescriptorSupport.createCollection(TESTRESULTLIST,
-                TestResultContainer.class, 16, PROPERTY_CONSTRAINTS[14], false,
-                PropertyAssociationType.COMPOSITION));
-        propertyMap.put(TESTSCRIPTRESULTLIST, PropertyDescriptorSupport.createCollection(
-                TESTSCRIPTRESULTLIST, TestScriptResult.class, 17, PROPERTY_CONSTRAINTS[15], false,
-                PropertyAssociationType.COMPOSITION));
+                TestResultContainer.class, 17, PROPERTY_CONSTRAINTS[14], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(TESTSCRIPTRESULTLIST, PropertyDescriptorSupport.createCollection(TESTSCRIPTRESULTLIST,
+                TestScriptResult.class, 18, PROPERTY_CONSTRAINTS[15], false, PropertyAssociationType.COMPOSITION));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -285,39 +289,29 @@ public class TestResult extends NabuccoDatatype implements Datatype {
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(LEVEL), this.level,
-                null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(STATUS), this.status,
-                null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(BRANDTYPE),
-                this.brandType, this.brandTypeRefId));
-        properties
-                .add(super.createProperty(TestResult.getPropertyDescriptor(NAME), this.name, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(LEVEL), this.getLevel(), null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(STATUS), this.getStatus(), null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(BRANDTYPE), this.getBrandType(),
+                this.brandTypeRefId));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(NAME), this.name, null));
         properties.add(super.createProperty(TestResult.getPropertyDescriptor(TESTCONFIGELEMENTKEY),
                 this.testConfigElementKey, null));
-        properties.add(super.createProperty(
-                TestResult.getPropertyDescriptor(TESTCONFIGELEMENTNAME),
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(TESTCONFIGELEMENTNAME),
                 this.testConfigElementName, null));
         properties.add(super.createProperty(TestResult.getPropertyDescriptor(TESTCONFIGELEMENTID),
                 this.testConfigElementId, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(SCHEMAELEMENTID),
-                this.schemaElementId, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(STARTTIME),
-                this.startTime, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(ENDTIME),
-                this.endTime, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(DURATION),
-                this.duration, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(MESSAGE),
-                this.message, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(ERRORMESSAGE),
-                this.errorMessage, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(JIRAEXPORT),
-                this.jiraExport, null));
-        properties.add(super.createProperty(TestResult.getPropertyDescriptor(TESTRESULTLIST),
-                this.testResultList, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(SCHEMAELEMENTID), this.schemaElementId,
+                null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(STARTTIME), this.startTime, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(ENDTIME), this.endTime, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(DURATION), this.duration, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(MESSAGE), this.message, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(ERRORMESSAGE), this.errorMessage, null));
+        properties.add(super.createProperty(TestResult.getPropertyDescriptor(JIRAEXPORT), this.jiraExport, null));
+        properties
+                .add(super.createProperty(TestResult.getPropertyDescriptor(TESTRESULTLIST), this.testResultList, null));
         properties.add(super.createProperty(TestResult.getPropertyDescriptor(TESTSCRIPTRESULTLIST),
                 this.testScriptResultList, null));
         return properties;
@@ -353,20 +347,20 @@ public class TestResult extends NabuccoDatatype implements Datatype {
         } else if ((property.getName().equals(SCHEMAELEMENTID) && (property.getType() == Identifier.class))) {
             this.setSchemaElementId(((Identifier) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(STARTTIME) && (property.getType() == DateValue.class))) {
-            this.setStartTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(STARTTIME) && (property.getType() == Date.class))) {
+            this.setStartTime(((Date) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ENDTIME) && (property.getType() == DateValue.class))) {
-            this.setEndTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(ENDTIME) && (property.getType() == Date.class))) {
+            this.setEndTime(((Date) property.getInstance()));
             return true;
         } else if ((property.getName().equals(DURATION) && (property.getType() == Duration.class))) {
             this.setDuration(((Duration) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(MESSAGE) && (property.getType() == Text.class))) {
-            this.setMessage(((Text) property.getInstance()));
+        } else if ((property.getName().equals(MESSAGE) && (property.getType() == LongText.class))) {
+            this.setMessage(((LongText) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == ErrorMessage.class))) {
-            this.setErrorMessage(((ErrorMessage) property.getInstance()));
+        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == LongText.class))) {
+            this.setErrorMessage(((LongText) property.getInstance()));
             return true;
         } else if ((property.getName().equals(JIRAEXPORT) && (property.getType() == Flag.class))) {
             this.setJiraExport(((Flag) property.getInstance()));
@@ -481,23 +475,17 @@ public class TestResult extends NabuccoDatatype implements Datatype {
         result = ((PRIME * result) + ((this.level == null) ? 0 : this.level.hashCode()));
         result = ((PRIME * result) + ((this.status == null) ? 0 : this.status.hashCode()));
         result = ((PRIME * result) + ((this.brandType == null) ? 0 : this.brandType.hashCode()));
-        result = ((PRIME * result) + ((this.brandTypeRefId == null) ? 0 : this.brandTypeRefId
-                .hashCode()));
+        result = ((PRIME * result) + ((this.brandTypeRefId == null) ? 0 : this.brandTypeRefId.hashCode()));
         result = ((PRIME * result) + ((this.name == null) ? 0 : this.name.hashCode()));
-        result = ((PRIME * result) + ((this.testConfigElementKey == null) ? 0
-                : this.testConfigElementKey.hashCode()));
-        result = ((PRIME * result) + ((this.testConfigElementName == null) ? 0
-                : this.testConfigElementName.hashCode()));
-        result = ((PRIME * result) + ((this.testConfigElementId == null) ? 0
-                : this.testConfigElementId.hashCode()));
-        result = ((PRIME * result) + ((this.schemaElementId == null) ? 0 : this.schemaElementId
-                .hashCode()));
+        result = ((PRIME * result) + ((this.testConfigElementKey == null) ? 0 : this.testConfigElementKey.hashCode()));
+        result = ((PRIME * result) + ((this.testConfigElementName == null) ? 0 : this.testConfigElementName.hashCode()));
+        result = ((PRIME * result) + ((this.testConfigElementId == null) ? 0 : this.testConfigElementId.hashCode()));
+        result = ((PRIME * result) + ((this.schemaElementId == null) ? 0 : this.schemaElementId.hashCode()));
         result = ((PRIME * result) + ((this.startTime == null) ? 0 : this.startTime.hashCode()));
         result = ((PRIME * result) + ((this.endTime == null) ? 0 : this.endTime.hashCode()));
         result = ((PRIME * result) + ((this.duration == null) ? 0 : this.duration.hashCode()));
         result = ((PRIME * result) + ((this.message == null) ? 0 : this.message.hashCode()));
-        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage
-                .hashCode()));
+        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage.hashCode()));
         result = ((PRIME * result) + ((this.jiraExport == null) ? 0 : this.jiraExport.hashCode()));
         return result;
     }
@@ -780,18 +768,18 @@ public class TestResult extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getStartTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
 
     /**
      * Missing description at method setStartTime.
      *
-     * @param startTime the DateValue.
+     * @param startTime the Date.
      */
-    public void setStartTime(DateValue startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -805,7 +793,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
             if ((startTime == null)) {
                 return;
             }
-            this.startTime = new DateValue();
+            this.startTime = new Date();
         }
         this.startTime.setValue(startTime);
     }
@@ -813,18 +801,18 @@ public class TestResult extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getEndTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getEndTime() {
+    public Date getEndTime() {
         return this.endTime;
     }
 
     /**
      * Missing description at method setEndTime.
      *
-     * @param endTime the DateValue.
+     * @param endTime the Date.
      */
-    public void setEndTime(DateValue endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -838,7 +826,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
             if ((endTime == null)) {
                 return;
             }
-            this.endTime = new DateValue();
+            this.endTime = new Date();
         }
         this.endTime.setValue(endTime);
     }
@@ -879,18 +867,18 @@ public class TestResult extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getMessage.
      *
-     * @return the Text.
+     * @return the LongText.
      */
-    public Text getMessage() {
+    public LongText getMessage() {
         return this.message;
     }
 
     /**
      * Missing description at method setMessage.
      *
-     * @param message the Text.
+     * @param message the LongText.
      */
-    public void setMessage(Text message) {
+    public void setMessage(LongText message) {
         this.message = message;
     }
 
@@ -904,7 +892,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
             if ((message == null)) {
                 return;
             }
-            this.message = new Text();
+            this.message = new LongText();
         }
         this.message.setValue(message);
     }
@@ -912,18 +900,18 @@ public class TestResult extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getErrorMessage.
      *
-     * @return the ErrorMessage.
+     * @return the LongText.
      */
-    public ErrorMessage getErrorMessage() {
+    public LongText getErrorMessage() {
         return this.errorMessage;
     }
 
     /**
      * Missing description at method setErrorMessage.
      *
-     * @param errorMessage the ErrorMessage.
+     * @param errorMessage the LongText.
      */
-    public void setErrorMessage(ErrorMessage errorMessage) {
+    public void setErrorMessage(LongText errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -937,7 +925,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
             if ((errorMessage == null)) {
                 return;
             }
-            this.errorMessage = new ErrorMessage();
+            this.errorMessage = new LongText();
         }
         this.errorMessage.setValue(errorMessage);
     }
@@ -982,8 +970,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     public NabuccoList<TestResultContainer> getTestResultList() {
         if ((this.testResultList == null)) {
-            this.testResultList = new NabuccoListImpl<TestResultContainer>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.testResultList = new NabuccoListImpl<TestResultContainer>(NabuccoCollectionState.INITIALIZED);
         }
         return this.testResultList;
     }
@@ -995,8 +982,7 @@ public class TestResult extends NabuccoDatatype implements Datatype {
      */
     public NabuccoList<TestScriptResult> getTestScriptResultList() {
         if ((this.testScriptResultList == null)) {
-            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.testScriptResultList = new NabuccoListImpl<TestScriptResult>(NabuccoCollectionState.INITIALIZED);
         }
         return this.testScriptResultList;
     }

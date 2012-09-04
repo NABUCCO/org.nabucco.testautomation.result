@@ -20,9 +20,9 @@ import org.nabucco.framework.base.facade.datatype.Name;
 import org.nabucco.framework.base.facade.datatype.Key;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
-import org.nabucco.testautomation.facade.datatype.base.Text;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
+import org.nabucco.framework.base.facade.datatype.date.Date;
+import org.nabucco.testautomation.property.facade.datatype.base.Text;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
 import org.nabucco.testautomation.result.facade.datatype.status.TestScriptStatusType;
@@ -41,20 +41,21 @@ public Datatype TestScriptResult extends TestScriptElementResult {
 
 	private Basetype Name[1] testScriptName;
 	
-	private Basetype DateValue[0..1] startTime;
+	private Basetype Date[0..1] startTime;
 	
-	private Basetype DateValue[0..1] endTime;
+	private Basetype Date[0..1] endTime;
 
 	private Basetype Duration[0..1] duration;
 	
 	private transient Datatype TestScriptElementResult[0..*] elementResultList;
 	
+	@FetchStrategy EAGER
 	private Datatype ActionTrace[0..*] actionTraceList;
 	
 	private Basetype Text[0..1] message;
 
-	@MaxLength 10000
-	private Basetype ErrorMessage[0..1] errorMessage;
+	@MaxLength 100000
+	private Basetype LongText[0..1] errorMessage;
 	
 	@MaxLength 100000
 	private Basetype LogTrace[0..1] logging;

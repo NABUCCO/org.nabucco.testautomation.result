@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
 import org.nabucco.framework.base.facade.datatype.Order;
@@ -27,7 +39,7 @@ public class TestResultContainer extends NabuccoDatatype implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,n;m0,1;" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,n;u0,n;m0,1;" };
 
     public static final String RESULT = "result";
 
@@ -69,12 +81,11 @@ public class TestResultContainer extends NabuccoDatatype implements Datatype {
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class)
-                .getPropertyMap());
-        propertyMap.put(RESULT, PropertyDescriptorSupport.createDatatype(RESULT, TestResult.class,
-                2, PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.AGGREGATION));
-        propertyMap.put(ORDERINDEX, PropertyDescriptorSupport.createBasetype(ORDERINDEX,
-                Order.class, 3, PROPERTY_CONSTRAINTS[1], false));
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class).getPropertyMap());
+        propertyMap.put(RESULT, PropertyDescriptorSupport.createDatatype(RESULT, TestResult.class, 3,
+                PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.AGGREGATION));
+        propertyMap.put(ORDERINDEX,
+                PropertyDescriptorSupport.createBasetype(ORDERINDEX, Order.class, 4, PROPERTY_CONSTRAINTS[1], false));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -84,12 +95,11 @@ public class TestResultContainer extends NabuccoDatatype implements Datatype {
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(TestResultContainer.getPropertyDescriptor(RESULT),
-                this.result, null));
-        properties.add(super.createProperty(TestResultContainer.getPropertyDescriptor(ORDERINDEX),
-                this.orderIndex, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(TestResultContainer.getPropertyDescriptor(RESULT), this.getResult(), null));
+        properties.add(super.createProperty(TestResultContainer.getPropertyDescriptor(ORDERINDEX), this.orderIndex,
+                null));
         return properties;
     }
 
@@ -210,8 +220,7 @@ public class TestResultContainer extends NabuccoDatatype implements Datatype {
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(TestResultContainer.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(TestResultContainer.class).getProperty(propertyName);
     }
 
     /**

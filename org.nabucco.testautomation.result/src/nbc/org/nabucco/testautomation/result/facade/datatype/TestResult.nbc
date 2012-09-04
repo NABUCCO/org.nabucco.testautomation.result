@@ -22,11 +22,10 @@ import org.nabucco.framework.base.facade.datatype.Key;
 import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.code.Code;
-import org.nabucco.testautomation.facade.datatype.base.Text;
 import org.nabucco.framework.base.facade.datatype.Flag;
-import org.nabucco.testautomation.facade.datatype.base.HierarchyLevelType;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
+import org.nabucco.framework.base.facade.datatype.date.Date;
+import org.nabucco.testautomation.property.facade.datatype.base.HierarchyLevelType;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
 import org.nabucco.testautomation.result.facade.datatype.status.TestConfigElementStatusType;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
@@ -55,16 +54,17 @@ public Datatype TestResult extends NabuccoDatatype {
 	
 	private Basetype Identifier[1] schemaElementId;
 	
-	private Basetype DateValue[0..1] startTime;
+	private Basetype Date[0..1] startTime;
 	
-	private Basetype DateValue[0..1] endTime;
+	private Basetype Date[0..1] endTime;
 	
 	private Basetype Duration[0..1] duration;
 
-	private Basetype Text[0..1] message;
-
 	@MaxLength 10000
-	private Basetype ErrorMessage[0..1] errorMessage;
+	private Basetype LongText[0..1] message;
+
+	@MaxLength 100000
+	private Basetype LongText[0..1] errorMessage;
 	
 	private Basetype Flag[1] jiraExport;
 

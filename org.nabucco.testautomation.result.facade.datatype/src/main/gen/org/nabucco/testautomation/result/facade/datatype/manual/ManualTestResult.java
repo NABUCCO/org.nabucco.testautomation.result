@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype.manual;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
@@ -17,13 +29,13 @@ import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescri
 import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
 import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
 import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
-import org.nabucco.testautomation.facade.datatype.engine.ContextSnapshot;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.manual.ManualState;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
+import org.nabucco.testautomation.settings.facade.datatype.engine.ContextSnapshot;
 
 /**
  * ManualTestResult<p/>The result of a manual test step<p/>
@@ -34,8 +46,10 @@ public class ManualTestResult extends TestResult implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,10000;m0,1;",
-            "l0,10000;m0,1;", "m0,n;", "m0,n;", "m0,n;", "m0,n;", "m0,1;", "m0,1;" };
+    private static final ManualState STATE_DEFAULT = ManualState.INITIALIZED;
+
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,10000;u0,n;m0,1;", "l0,10000;u0,n;m0,1;",
+            "m0,n;", "m0,n;", "m0,n;", "m0,n;", "m0,1;", "m0,1;" };
 
     public static final String STATE = "state";
 
@@ -71,11 +85,7 @@ public class ManualTestResult extends TestResult implements Datatype {
 
     private ContextSnapshot contextSnapshot;
 
-    private Long contextSnapshotRefId;
-
     private ContextSnapshot propertyList;
-
-    private Long propertyListRefId;
 
     /** Constructs a new ManualTestResult instance. */
     public ManualTestResult() {
@@ -85,7 +95,7 @@ public class ManualTestResult extends TestResult implements Datatype {
 
     /** InitDefaults. */
     private void initDefaults() {
-        state = ManualState.INITIALIZED;
+        state = STATE_DEFAULT;
     }
 
     /**
@@ -117,14 +127,8 @@ public class ManualTestResult extends TestResult implements Datatype {
         if ((this.getContextSnapshot() != null)) {
             clone.setContextSnapshot(this.getContextSnapshot().cloneObject());
         }
-        if ((this.getContextSnapshotRefId() != null)) {
-            clone.setContextSnapshotRefId(this.getContextSnapshotRefId());
-        }
         if ((this.getPropertyList() != null)) {
             clone.setPropertyList(this.getPropertyList().cloneObject());
-        }
-        if ((this.getPropertyListRefId() != null)) {
-            clone.setPropertyListRefId(this.getPropertyListRefId());
         }
     }
 
@@ -135,7 +139,7 @@ public class ManualTestResult extends TestResult implements Datatype {
      */
     List<ActionTrace> getActionTraceListJPA() {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.LAZY);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.EAGER);
         }
         return ((NabuccoListImpl<ActionTrace>) this.actionTraceList).getDelegate();
     }
@@ -147,7 +151,7 @@ public class ManualTestResult extends TestResult implements Datatype {
      */
     void setActionTraceListJPA(List<ActionTrace> actionTraceList) {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.LAZY);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.EAGER);
         }
         ((NabuccoListImpl<ActionTrace>) this.actionTraceList).setDelegate(actionTraceList);
     }
@@ -160,29 +164,24 @@ public class ManualTestResult extends TestResult implements Datatype {
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
         propertyMap.putAll(PropertyCache.getInstance().retrieve(TestResult.class).getPropertyMap());
-        propertyMap.put(STATE, PropertyDescriptorSupport.createEnumeration(STATE,
-                ManualState.class, 18, PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(USERMESSAGE, PropertyDescriptorSupport.createBasetype(USERMESSAGE,
-                LogTrace.class, 19, PROPERTY_CONSTRAINTS[1], false));
-        propertyMap.put(USERERRORMESSAGE, PropertyDescriptorSupport.createBasetype(
-                USERERRORMESSAGE, LogTrace.class, 20, PROPERTY_CONSTRAINTS[2], false));
-        propertyMap.put(ACTIONTRACELIST, PropertyDescriptorSupport.createCollection(
-                ACTIONTRACELIST, ActionTrace.class, 21, PROPERTY_CONSTRAINTS[3], false,
-                PropertyAssociationType.COMPOSITION));
-        propertyMap.put(SCREENSHOTS, PropertyDescriptorSupport.createCollection(SCREENSHOTS,
-                ScreenshotTrace.class, 22, PROPERTY_CONSTRAINTS[4], false,
-                PropertyAssociationType.COMPOSITION));
-        propertyMap.put(FILES, PropertyDescriptorSupport.createCollection(FILES, FileTrace.class,
-                23, PROPERTY_CONSTRAINTS[5], false, PropertyAssociationType.COMPOSITION));
-        propertyMap.put(MESSAGES, PropertyDescriptorSupport.createCollection(MESSAGES,
-                MessageTrace.class, 24, PROPERTY_CONSTRAINTS[6], false,
-                PropertyAssociationType.COMPOSITION));
+        propertyMap.put(STATE, PropertyDescriptorSupport.createEnumeration(STATE, ManualState.class, 19,
+                PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(USERMESSAGE, PropertyDescriptorSupport.createBasetype(USERMESSAGE, LogTrace.class, 20,
+                PROPERTY_CONSTRAINTS[1], false));
+        propertyMap.put(USERERRORMESSAGE, PropertyDescriptorSupport.createBasetype(USERERRORMESSAGE, LogTrace.class,
+                21, PROPERTY_CONSTRAINTS[2], false));
+        propertyMap.put(ACTIONTRACELIST, PropertyDescriptorSupport.createCollection(ACTIONTRACELIST, ActionTrace.class,
+                22, PROPERTY_CONSTRAINTS[3], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(SCREENSHOTS, PropertyDescriptorSupport.createCollection(SCREENSHOTS, ScreenshotTrace.class, 23,
+                PROPERTY_CONSTRAINTS[4], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(FILES, PropertyDescriptorSupport.createCollection(FILES, FileTrace.class, 24,
+                PROPERTY_CONSTRAINTS[5], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(MESSAGES, PropertyDescriptorSupport.createCollection(MESSAGES, MessageTrace.class, 25,
+                PROPERTY_CONSTRAINTS[6], false, PropertyAssociationType.COMPOSITION));
         propertyMap.put(CONTEXTSNAPSHOT, PropertyDescriptorSupport.createDatatype(CONTEXTSNAPSHOT,
-                ContextSnapshot.class, 25, PROPERTY_CONSTRAINTS[7], false,
-                PropertyAssociationType.COMPONENT));
-        propertyMap.put(PROPERTYLIST, PropertyDescriptorSupport.createDatatype(PROPERTYLIST,
-                ContextSnapshot.class, 26, PROPERTY_CONSTRAINTS[8], false,
-                PropertyAssociationType.COMPONENT));
+                ContextSnapshot.class, 26, PROPERTY_CONSTRAINTS[7], false, PropertyAssociationType.COMPONENT));
+        propertyMap.put(PROPERTYLIST, PropertyDescriptorSupport.createDatatype(PROPERTYLIST, ContextSnapshot.class, 27,
+                PROPERTY_CONSTRAINTS[8], false, PropertyAssociationType.COMPONENT));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -192,29 +191,23 @@ public class ManualTestResult extends TestResult implements Datatype {
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(STATE),
-                this.state, null));
-        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(USERMESSAGE),
-                this.userMessage, null));
-        properties.add(super.createProperty(
-                ManualTestResult.getPropertyDescriptor(USERERRORMESSAGE), this.userErrorMessage,
-                null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(STATE), this.getState(), null));
         properties
-                .add(super.createProperty(ManualTestResult.getPropertyDescriptor(ACTIONTRACELIST),
-                        this.actionTraceList, null));
-        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(SCREENSHOTS),
-                this.screenshots, null));
-        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(FILES),
-                this.files, null));
-        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(MESSAGES),
-                this.messages, null));
-        properties.add(super.createProperty(
-                ManualTestResult.getPropertyDescriptor(CONTEXTSNAPSHOT), this.contextSnapshot,
-                this.contextSnapshotRefId));
+                .add(super.createProperty(ManualTestResult.getPropertyDescriptor(USERMESSAGE), this.userMessage, null));
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(USERERRORMESSAGE),
+                this.userErrorMessage, null));
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(ACTIONTRACELIST),
+                this.actionTraceList, null));
+        properties
+                .add(super.createProperty(ManualTestResult.getPropertyDescriptor(SCREENSHOTS), this.screenshots, null));
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(FILES), this.files, null));
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(MESSAGES), this.messages, null));
+        properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(CONTEXTSNAPSHOT),
+                this.getContextSnapshot(), null));
         properties.add(super.createProperty(ManualTestResult.getPropertyDescriptor(PROPERTYLIST),
-                this.propertyList, this.propertyListRefId));
+                this.getPropertyList(), null));
         return properties;
     }
 
@@ -290,20 +283,10 @@ public class ManualTestResult extends TestResult implements Datatype {
                 return false;
         } else if ((!this.contextSnapshot.equals(other.contextSnapshot)))
             return false;
-        if ((this.contextSnapshotRefId == null)) {
-            if ((other.contextSnapshotRefId != null))
-                return false;
-        } else if ((!this.contextSnapshotRefId.equals(other.contextSnapshotRefId)))
-            return false;
         if ((this.propertyList == null)) {
             if ((other.propertyList != null))
                 return false;
         } else if ((!this.propertyList.equals(other.propertyList)))
-            return false;
-        if ((this.propertyListRefId == null)) {
-            if ((other.propertyListRefId != null))
-                return false;
-        } else if ((!this.propertyListRefId.equals(other.propertyListRefId)))
             return false;
         return true;
     }
@@ -314,16 +297,9 @@ public class ManualTestResult extends TestResult implements Datatype {
         int result = super.hashCode();
         result = ((PRIME * result) + ((this.state == null) ? 0 : this.state.hashCode()));
         result = ((PRIME * result) + ((this.userMessage == null) ? 0 : this.userMessage.hashCode()));
-        result = ((PRIME * result) + ((this.userErrorMessage == null) ? 0 : this.userErrorMessage
-                .hashCode()));
-        result = ((PRIME * result) + ((this.contextSnapshot == null) ? 0 : this.contextSnapshot
-                .hashCode()));
-        result = ((PRIME * result) + ((this.contextSnapshotRefId == null) ? 0
-                : this.contextSnapshotRefId.hashCode()));
-        result = ((PRIME * result) + ((this.propertyList == null) ? 0 : this.propertyList
-                .hashCode()));
-        result = ((PRIME * result) + ((this.propertyListRefId == null) ? 0 : this.propertyListRefId
-                .hashCode()));
+        result = ((PRIME * result) + ((this.userErrorMessage == null) ? 0 : this.userErrorMessage.hashCode()));
+        result = ((PRIME * result) + ((this.contextSnapshot == null) ? 0 : this.contextSnapshot.hashCode()));
+        result = ((PRIME * result) + ((this.propertyList == null) ? 0 : this.propertyList.hashCode()));
         return result;
     }
 
@@ -438,8 +414,7 @@ public class ManualTestResult extends TestResult implements Datatype {
      */
     public NabuccoList<ActionTrace> getActionTraceList() {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.INITIALIZED);
         }
         return this.actionTraceList;
     }
@@ -451,8 +426,7 @@ public class ManualTestResult extends TestResult implements Datatype {
      */
     public NabuccoList<ScreenshotTrace> getScreenshots() {
         if ((this.screenshots == null)) {
-            this.screenshots = new NabuccoListImpl<ScreenshotTrace>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.screenshots = new NabuccoListImpl<ScreenshotTrace>(NabuccoCollectionState.INITIALIZED);
         }
         return this.screenshots;
     }
@@ -488,11 +462,6 @@ public class ManualTestResult extends TestResult implements Datatype {
      */
     public void setContextSnapshot(ContextSnapshot contextSnapshot) {
         this.contextSnapshot = contextSnapshot;
-        if ((contextSnapshot != null)) {
-            this.setContextSnapshotRefId(contextSnapshot.getId());
-        } else {
-            this.setContextSnapshotRefId(null);
-        }
     }
 
     /**
@@ -505,35 +474,12 @@ public class ManualTestResult extends TestResult implements Datatype {
     }
 
     /**
-     * Getter for the ContextSnapshotRefId.
-     *
-     * @return the Long.
-     */
-    public Long getContextSnapshotRefId() {
-        return this.contextSnapshotRefId;
-    }
-
-    /**
-     * Setter for the ContextSnapshotRefId.
-     *
-     * @param contextSnapshotRefId the Long.
-     */
-    public void setContextSnapshotRefId(Long contextSnapshotRefId) {
-        this.contextSnapshotRefId = contextSnapshotRefId;
-    }
-
-    /**
      * Missing description at method setPropertyList.
      *
      * @param propertyList the ContextSnapshot.
      */
     public void setPropertyList(ContextSnapshot propertyList) {
         this.propertyList = propertyList;
-        if ((propertyList != null)) {
-            this.setPropertyListRefId(propertyList.getId());
-        } else {
-            this.setPropertyListRefId(null);
-        }
     }
 
     /**
@@ -546,32 +492,13 @@ public class ManualTestResult extends TestResult implements Datatype {
     }
 
     /**
-     * Getter for the PropertyListRefId.
-     *
-     * @return the Long.
-     */
-    public Long getPropertyListRefId() {
-        return this.propertyListRefId;
-    }
-
-    /**
-     * Setter for the PropertyListRefId.
-     *
-     * @param propertyListRefId the Long.
-     */
-    public void setPropertyListRefId(Long propertyListRefId) {
-        this.propertyListRefId = propertyListRefId;
-    }
-
-    /**
      * Getter for the PropertyDescriptor.
      *
      * @param propertyName the String.
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(ManualTestResult.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(ManualTestResult.class).getProperty(propertyName);
     }
 
     /**

@@ -1,15 +1,26 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.ui.rcp.communication.jira;
 
+import org.nabucco.framework.base.facade.datatype.NabuccoSystem;
+import org.nabucco.framework.base.facade.datatype.context.ServiceSubContext;
 import org.nabucco.framework.base.facade.exception.client.ClientException;
 import org.nabucco.framework.base.facade.message.EmptyServiceMessage;
 import org.nabucco.framework.base.facade.message.ServiceRequest;
 import org.nabucco.framework.base.facade.message.ServiceResponse;
-import org.nabucco.framework.plugin.base.Activator;
 import org.nabucco.framework.plugin.base.component.communication.ServiceDelegateSupport;
-import org.nabucco.framework.plugin.base.logging.NabuccoLogMessage;
 import org.nabucco.testautomation.result.facade.message.jira.ComponentListMsg;
 import org.nabucco.testautomation.result.facade.message.jira.IssueMsg;
 import org.nabucco.testautomation.result.facade.message.jira.IssueTypeListMsg;
@@ -42,28 +53,33 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
     /**
      * Getter for the Projects.
      *
-     * @param rq the EmptyServiceMessage.
+     * @param subContexts the ServiceSubContext....
+     * @param message the EmptyServiceMessage.
      * @return the ProjectListMsg.
      * @throws ClientException
      */
-    public ProjectListMsg getProjects(EmptyServiceMessage rq) throws ClientException {
+    public ProjectListMsg getProjects(EmptyServiceMessage message, ServiceSubContext... subContexts)
+            throws ClientException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<ProjectListMsg> rs;
+                super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<ProjectListMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.getProjects(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.getProjects(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.getProjects", " Time: ",
-                                String.valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "getProjects", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
         throw new ClientException("Cannot execute service operation: JiraService.getProjects");
@@ -72,28 +88,33 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
     /**
      * Getter for the Priorities.
      *
-     * @param rq the EmptyServiceMessage.
+     * @param subContexts the ServiceSubContext....
+     * @param message the EmptyServiceMessage.
      * @return the PriorityListMsg.
      * @throws ClientException
      */
-    public PriorityListMsg getPriorities(EmptyServiceMessage rq) throws ClientException {
+    public PriorityListMsg getPriorities(EmptyServiceMessage message, ServiceSubContext... subContexts)
+            throws ClientException {
         ServiceRequest<EmptyServiceMessage> request = new ServiceRequest<EmptyServiceMessage>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<PriorityListMsg> rs;
+                super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<PriorityListMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.getPriorities(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.getPriorities(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.getPriorities", " Time: ", String
-                                        .valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "getPriorities", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
         throw new ClientException("Cannot execute service operation: JiraService.getPriorities");
@@ -102,90 +123,99 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
     /**
      * Getter for the IssueTypesOfProject.
      *
-     * @param rq the ProjectMsg.
+     * @param subContexts the ServiceSubContext....
+     * @param message the ProjectMsg.
      * @return the IssueTypeListMsg.
      * @throws ClientException
      */
-    public IssueTypeListMsg getIssueTypesOfProject(ProjectMsg rq) throws ClientException {
-        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<IssueTypeListMsg> rs;
+    public IssueTypeListMsg getIssueTypesOfProject(ProjectMsg message, ServiceSubContext... subContexts)
+            throws ClientException {
+        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<IssueTypeListMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.getIssueTypesOfProject(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.getIssueTypesOfProject(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.getIssueTypesOfProject", " Time: ", String
-                                        .valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "getIssueTypesOfProject", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
-        throw new ClientException(
-                "Cannot execute service operation: JiraService.getIssueTypesOfProject");
+        throw new ClientException("Cannot execute service operation: JiraService.getIssueTypesOfProject");
     }
 
     /**
      * Getter for the ComponentsOfProject.
      *
-     * @param rq the ProjectMsg.
+     * @param subContexts the ServiceSubContext....
+     * @param message the ProjectMsg.
      * @return the ComponentListMsg.
      * @throws ClientException
      */
-    public ComponentListMsg getComponentsOfProject(ProjectMsg rq) throws ClientException {
-        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<ComponentListMsg> rs;
+    public ComponentListMsg getComponentsOfProject(ProjectMsg message, ServiceSubContext... subContexts)
+            throws ClientException {
+        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<ComponentListMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.getComponentsOfProject(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.getComponentsOfProject(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.getComponentsOfProject", " Time: ", String
-                                        .valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "getComponentsOfProject", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
-        throw new ClientException(
-                "Cannot execute service operation: JiraService.getComponentsOfProject");
+        throw new ClientException("Cannot execute service operation: JiraService.getComponentsOfProject");
     }
 
     /**
      * CreateIssue.
      *
-     * @param rq the IssueMsg.
+     * @param subContexts the ServiceSubContext....
+     * @param message the IssueMsg.
      * @return the IssueMsg.
      * @throws ClientException
      */
-    public IssueMsg createIssue(IssueMsg rq) throws ClientException {
-        ServiceRequest<IssueMsg> request = new ServiceRequest<IssueMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<IssueMsg> rs;
+    public IssueMsg createIssue(IssueMsg message, ServiceSubContext... subContexts) throws ClientException {
+        ServiceRequest<IssueMsg> request = new ServiceRequest<IssueMsg>(super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<IssueMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.createIssue(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.createIssue(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.createIssue", " Time: ",
-                                String.valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "createIssue", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
         throw new ClientException("Cannot execute service operation: JiraService.createIssue");
@@ -194,28 +224,31 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
     /**
      * CreateIssues.
      *
-     * @param rq the IssueMsg.
+     * @param subContexts the ServiceSubContext....
+     * @param message the IssueMsg.
      * @return the IssueMsg.
      * @throws ClientException
      */
-    public IssueMsg createIssues(IssueMsg rq) throws ClientException {
-        ServiceRequest<IssueMsg> request = new ServiceRequest<IssueMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<IssueMsg> rs;
+    public IssueMsg createIssues(IssueMsg message, ServiceSubContext... subContexts) throws ClientException {
+        ServiceRequest<IssueMsg> request = new ServiceRequest<IssueMsg>(super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<IssueMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.createIssues(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.createIssues(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.createIssues", " Time: ", String
-                                        .valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "createIssues", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
         throw new ClientException("Cannot execute service operation: JiraService.createIssues");
@@ -224,31 +257,34 @@ public class JiraServiceDelegate extends ServiceDelegateSupport {
     /**
      * Getter for the VersionsOfProject.
      *
-     * @param rq the ProjectMsg.
+     * @param subContexts the ServiceSubContext....
+     * @param message the ProjectMsg.
      * @return the VersionListMsg.
      * @throws ClientException
      */
-    public VersionListMsg getVersionsOfProject(ProjectMsg rq) throws ClientException {
-        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(
-                super.createServiceContext());
-        request.setRequestMessage(rq);
-        ServiceResponse<VersionListMsg> rs;
+    public VersionListMsg getVersionsOfProject(ProjectMsg message, ServiceSubContext... subContexts)
+            throws ClientException {
+        ServiceRequest<ProjectMsg> request = new ServiceRequest<ProjectMsg>(super.createServiceContext(subContexts));
+        request.setRequestMessage(message);
+        ServiceResponse<VersionListMsg> response = null;
+        Exception exception = null;
         if ((service != null)) {
-            long start = System.currentTimeMillis();
+            super.handleRequest(request);
+            long start = NabuccoSystem.getCurrentTimeMillis();
             try {
-                rs = service.getVersionsOfProject(request);
-                return rs.getResponseMessage();
-            } catch (Exception exception) {
-                super.processException(exception);
+                response = service.getVersionsOfProject(request);
+            } catch (Exception e) {
+                exception = e;
             } finally {
-                long end = System.currentTimeMillis();
-                Activator.getDefault().logDebug(
-                        new NabuccoLogMessage(JiraServiceDelegate.class, "Service: ",
-                                "JiraService.getVersionsOfProject", " Time: ", String
-                                        .valueOf((end - start)), "ms."));
+                long end = NabuccoSystem.getCurrentTimeMillis();
+                long duration = (end - start);
+                super.monitorResult(JiraService.class, "getVersionsOfProject", duration, exception);
+            }
+            if ((response != null)) {
+                super.handleResponse(response);
+                return response.getResponseMessage();
             }
         }
-        throw new ClientException(
-                "Cannot execute service operation: JiraService.getVersionsOfProject");
+        throw new ClientException("Cannot execute service operation: JiraService.getVersionsOfProject");
     }
 }

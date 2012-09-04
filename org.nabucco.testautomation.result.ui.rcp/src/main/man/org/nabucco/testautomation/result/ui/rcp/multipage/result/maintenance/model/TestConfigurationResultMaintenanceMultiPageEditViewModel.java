@@ -1,19 +1,19 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2012 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.model;
 
 import java.io.Serializable;
@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.nabucco.framework.base.facade.component.injector.NabuccoInjectionReciever;
 import org.nabucco.framework.base.facade.component.injector.NabuccoInjector;
 import org.nabucco.framework.base.facade.datatype.Datatype;
+import org.nabucco.framework.base.facade.exception.client.ClientException;
+import org.nabucco.framework.plugin.base.Activator;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailTreeNode;
 import org.nabucco.framework.plugin.base.component.multipage.model.MultiPageEditViewModel;
 import org.nabucco.framework.plugin.base.component.multipage.xml.XMLEditorTextPart;
@@ -67,7 +69,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
      * {@inheritDoc}
      */
     @Override
-    public MasterDetailTreeNode add(MasterDetailTreeNode parent, Datatype newChild) {
+    public MasterDetailTreeNode add(MasterDetailTreeNode parent, Datatype newChild) throws ClientException {
         MasterDetailTreeNode result = handler.addChild(parent, newChild);
         updateProperty(getPropertyDatatype(), "", "*");
         return result;
@@ -83,7 +85,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
      */
     @Override
     public MasterDetailTreeNode createNewAndAdd(final MasterDetailTreeNode parent,
-            final Datatype newChild) {
+            final Datatype newChild) throws ClientException {
         // observers will be already informed in the node is added (which is
         // relevant for view)
 
@@ -95,7 +97,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
      * {@inheritDoc}
      */
     @Override
-    public void remove(ISelection child) {
+    public void remove(ISelection child) throws ClientException {
         handler.remove(child);
         updateProperty(getPropertyDatatype(), "", "*");
     }
@@ -112,7 +114,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Datatype[]> getPossibleChildren(Datatype datatype) {
+    public Map<String, Datatype[]> getPossibleChildren(Datatype datatype) throws ClientException {
         return handler.getPossibleChildren(datatype);
     }
 
@@ -151,11 +153,15 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
      *            value
      */
     public void setTestConfigurationResult(final TestConfigurationResult testConfigurationResult) {
-        this.testConfigurationResult = testConfigurationResult;
-        treeStructure = handler.createMasterDetailRepresentation(this.testConfigurationResult);
-        xmlStructure = handler.createXmlRepresentation(this.testConfigurationResult);
+        try {
+            this.testConfigurationResult = testConfigurationResult;
+            treeStructure = handler.createMasterDetailRepresentation(this.testConfigurationResult);
+            xmlStructure = handler.createXmlRepresentation(this.testConfigurationResult);
 
-        updateProperty(getPropertyDatatype(), "", "*");
+            updateProperty(getPropertyDatatype(), "", "*");
+        } catch (ClientException e) {
+            Activator.getDefault().logError(e);
+        }
     }
 
     /**
@@ -174,12 +180,12 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
     }
 
     @Override
-    public ElementPickerParameter getElementPickerParameter(Datatype datatype) {
+    public ElementPickerParameter getElementPickerParameter(Datatype datatype) throws ClientException {
         return handler.getElementPickerParameter(datatype);
     }
 
     @Override
-    public LabelForDialog getLabelForDialog() {
+    public LabelForDialog getLabelForDialog() throws ClientException {
         return handler.getLabelForDialog();
     }
 
@@ -194,7 +200,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModel extends Mu
     }
 
 	@Override
-	public Menu getContextMenu(ISelection selection, TreeViewer parent) {
+	public Menu getContextMenu(ISelection selection, TreeViewer parent) throws ClientException {
 		return handler.getContextMenu(selection, parent);
 	}
 

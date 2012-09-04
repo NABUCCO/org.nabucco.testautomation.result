@@ -20,16 +20,17 @@ import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
-import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.datatype.manual.ManualTestResult;
+import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
+import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
-import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
-import org.nabucco.testautomation.result.facade.service.maintain.MaintainTestConfigurationResult;
-import org.nabucco.testautomation.result.facade.service.produce.ProduceTestResult;
-import org.nabucco.testautomation.result.facade.service.produce.ProduceTrace;
-import org.nabucco.testautomation.result.facade.service.search.SearchTestConfigurationResult;
 import org.nabucco.testautomation.result.facade.service.jira.JiraService;
+import org.nabucco.testautomation.result.facade.service.maintain.MaintainResult;
+import org.nabucco.testautomation.result.facade.service.produce.ProduceResult;
+import org.nabucco.testautomation.result.facade.service.report.ReportResult;
+import org.nabucco.testautomation.result.facade.service.resolve.ResolveResult;
+import org.nabucco.testautomation.result.facade.service.search.SearchResult;
 
 @Author			Steffen Schmidt
 @Company		PRODYNA AG
@@ -57,14 +58,16 @@ public Component ResultComponent {
 
 	private persistent Datatype FileTrace[1] fileTrace;
 
-	public Service MaintainTestConfigurationResult;
+	public Service MaintainResult;
 	
-	public Service SearchTestConfigurationResult;
+	public Service SearchResult;
 
-	public Service ProduceTestResult;
+	public Service ResolveResult;
 
-	public Service ProduceTrace;
-	
+	public Service ReportResult;
+
+	public Service ProduceResult;
+
 	public Service JiraService;
 	
 }

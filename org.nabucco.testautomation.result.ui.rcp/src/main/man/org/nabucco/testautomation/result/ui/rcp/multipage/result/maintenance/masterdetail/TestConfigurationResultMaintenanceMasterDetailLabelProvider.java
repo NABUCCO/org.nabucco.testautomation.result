@@ -1,19 +1,19 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2012 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.masterdetail;
 
 import java.io.Serializable;
@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nabucco.framework.base.facade.datatype.Datatype;
+import org.nabucco.framework.base.facade.datatype.Name;
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailTreeNode;
 import org.nabucco.framework.plugin.base.layout.I18NLabelProviderContributor;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
@@ -37,163 +38,191 @@ import org.nabucco.testautomation.result.facade.datatype.trace.FileTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.ScreenshotTrace;
 import org.nabucco.testautomation.result.ui.rcp.images.ResultImageRegistry;
 
-
 /**
- * TestConfigurationMaintainanceMasterDetailLabelProvider
+ * TestConfigurationMaintenanceMasterDetailLabelProvider
  * 
  * @author Markus Jorroch, PRODYNA AG
  */
 public class TestConfigurationResultMaintenanceMasterDetailLabelProvider implements I18NLabelProviderContributor {
 
-	private static final String ICON_RESULT = "icons/case.png";
+    private static final String NAME = "name";
 
-	private static final String ICON_CLOCK = "icons/clock.png";
+    private static final String ICON_RESULT = "icons/case.png";
 
-	private static final String ICON_FOLDER = "icons/folder.png";
+    private static final String ICON_CLOCK = "icons/clock.png";
 
-	private static final String MASTER_DETAIL_TREE = "MasterDetailTree.";
+    private static final String ICON_FOLDER = "icons/folder.png";
 
-	private static TestConfigurationResultMaintenanceMasterDetailLabelProvider instance = new TestConfigurationResultMaintenanceMasterDetailLabelProvider();
+    private static final String MASTER_DETAIL_TREE = "MasterDetailTree.";
 
-	private TestConfigurationResultMaintenanceMasterDetailLabelProvider() {
-	}
+    private static final String MASTER_DETAIL_TREE_ACTION_RESULT = MASTER_DETAIL_TREE + "ActionTrace";
 
-	public static TestConfigurationResultMaintenanceMasterDetailLabelProvider getInstance() {
-		return instance;
-	}
+    private static final String MASTER_DETAIL_TREE_SCRIPT_RESULT = MASTER_DETAIL_TREE + "TestScriptResult";
 
-	@Override
-	public Map.Entry<String, Map<String, ? extends Serializable>> getText(final Object element) {
-		Map.Entry<String, Map<String, ? extends Serializable>> result = null;
-		if (element instanceof MasterDetailTreeNode) {
-			MasterDetailTreeNode treeNode = (MasterDetailTreeNode) element;
-			result = getText(treeNode.getDatatype());
-		}
-		return result;
-	}
+    private static final String MASTER_DETAIL_TREE_TEST_RESULT = MASTER_DETAIL_TREE + "TestResult";
 
-	/**
-	 * String representing a special datatype.
-	 * 
-	 * @param datatype
-	 * @return
-	 */
-	private Map.Entry<String, Map<String, ? extends Serializable>> getText(final Datatype datatype) {
-		Map.Entry<String, Map<String, ? extends Serializable>> result = new AbstractMap.SimpleEntry<String, Map<String, ? extends Serializable>>(
-				datatype.toString(), null);
+    private static final String MASTER_DETAIL_TREE_CONFIG_RESULT = MASTER_DETAIL_TREE + "TestConfigurationResult";
 
-		if (datatype instanceof TestConfigurationResult) {
-			TestConfigurationResult testConfigurationResult = (TestConfigurationResult) datatype;
-			result = createEntry(MASTER_DETAIL_TREE + "TestConfigurationResult", "name", testConfigurationResult.getName().getValue());
-		} else if (datatype instanceof TestResult) {
-			TestResult testResult = (TestResult) datatype;
-			result = createEntry(MASTER_DETAIL_TREE + "TestResult", "name", testResult.getName().getValue());
-		} else if (datatype instanceof TestScriptResult) {
-			TestScriptResult testScriptResult = (TestScriptResult) datatype;
-			result = createEntry(MASTER_DETAIL_TREE + "TestScriptResult", "name", testScriptResult.getTestScriptName().getValue());
-		} else if (datatype instanceof ActionTrace) {
-			ActionTrace actionTrace = (ActionTrace) datatype;
-			result = createEntry(MASTER_DETAIL_TREE + "ActionTrace", "name", actionTrace.getName().getValue().toString());
-		}
-		return result;
-	}
+    private static TestConfigurationResultMaintenanceMasterDetailLabelProvider instance = new TestConfigurationResultMaintenanceMasterDetailLabelProvider();
 
-	private SimpleEntry<String, Map<String, ? extends Serializable>> createEntry(final String i18n, String key, String value) {
-		return new AbstractMap.SimpleEntry<String, Map<String, ? extends Serializable>>(i18n, createMap(key, value));
-	}
+    private TestConfigurationResultMaintenanceMasterDetailLabelProvider() {
+    }
 
-	private Map<String, ? extends Serializable> createMap(final String key, final String value) {
-		Map<String, String> result = new HashMap<String, String>();
-		result.put(key, value);
-		return result;
-	}
+    public static TestConfigurationResultMaintenanceMasterDetailLabelProvider getInstance() {
+        return instance;
+    }
 
-	@Override
-	public String getImage(Object element) {
+    @Override
+    public Map.Entry<String, Map<String, ? extends Serializable>> getText(final Object element) {
+        Map.Entry<String, Map<String, ? extends Serializable>> result = null;
+        if (element instanceof MasterDetailTreeNode) {
+            MasterDetailTreeNode treeNode = (MasterDetailTreeNode) element;
+            result = getText(treeNode.getDatatype());
+        }
+        return result;
+    }
 
-		if (element instanceof MasterDetailTreeNode) {
+    /**
+     * String representing a special datatype.
+     * 
+     * @param datatype
+     *            the datatype to find a text for
+     * 
+     * @return a textual representation of the given datatype
+     */
+    private Map.Entry<String, Map<String, ? extends Serializable>> getText(final Datatype datatype) {
+        Map.Entry<String, Map<String, ? extends Serializable>> entry;
 
-			MasterDetailTreeNode treeNode = (MasterDetailTreeNode) element;
-			Datatype datatype = treeNode.getDatatype();
-			return getImage(datatype);
-		} else if (element instanceof Datatype) {
-			return getImage((Datatype) element);
-		}
-		return ICON_FOLDER;
-	}
+        if (datatype instanceof TestConfigurationResult) {
+            TestConfigurationResult result = (TestConfigurationResult) datatype;
+            entry = createEntry(MASTER_DETAIL_TREE_CONFIG_RESULT, NAME, result.getName());
+        } else if (datatype instanceof TestResult) {
+            TestResult result = (TestResult) datatype;
+            entry = createEntry(MASTER_DETAIL_TREE_TEST_RESULT, NAME, result.getName());
+        } else if (datatype instanceof TestScriptResult) {
+            TestScriptResult result = (TestScriptResult) datatype;
+            entry = createEntry(MASTER_DETAIL_TREE_SCRIPT_RESULT, NAME, result.getTestScriptName());
+        } else if (datatype instanceof ActionTrace) {
+            ActionTrace actionTrace = (ActionTrace) datatype;
+            entry = createEntry(MASTER_DETAIL_TREE_ACTION_RESULT, NAME, actionTrace.getName());
+        } else {
+            entry = new AbstractMap.SimpleEntry<String, Map<String, ? extends Serializable>>(datatype.getClass()
+                    .getSimpleName(), null);
+        }
 
-	private String getImage(Datatype datatype) {
+        return entry;
+    }
 
-		if (datatype instanceof TestResultContainer) {
-			datatype = ((TestResultContainer) datatype).getResult();
-		}
+    /**
+     * Create the property entry
+     * 
+     * @param i18n
+     *            the internationalized value
+     * @param key
+     *            parameter key
+     * @param name
+     *            parameter value
+     * 
+     * @return the new created entry
+     */
+    private SimpleEntry<String, Map<String, ? extends Serializable>> createEntry(final String i18n, String key,
+            Name name) {
+        return new AbstractMap.SimpleEntry<String, Map<String, ? extends Serializable>>(i18n, createMap(key,
+                name.getValue()));
+    }
 
-		if (datatype instanceof TestConfigurationResult) {
+    private Map<String, ? extends Serializable> createMap(final String key, final String value) {
+        Map<String, String> result = new HashMap<String, String>();
+        result.put(key, value);
+        return result;
+    }
 
-			TestConfigurationResult result = (TestConfigurationResult) datatype;
-			TestConfigurationStatusType status = result.getStatus();
+    @Override
+    public String getImage(Object element) {
 
-			if (status == null) {
-				return ResultImageRegistry.ICON_RUN.getId();
-			}
+        if (element instanceof MasterDetailTreeNode) {
 
-			switch (status) {
-			case INITIALIZED:
-				return ResultImageRegistry.ICON_RUN.getId();
-			case RUNNING:
-				return ResultImageRegistry.ICON_RUN.getId();
-			case CANCELLED:
-			case FINISHED:
-				return ICON_RESULT;
-			default:
-				break;
-			}
+            MasterDetailTreeNode treeNode = (MasterDetailTreeNode) element;
+            Datatype datatype = treeNode.getDatatype();
+            return getImage(datatype);
+        } else if (element instanceof Datatype) {
+            return getImage((Datatype) element);
+        }
+        return ICON_FOLDER;
+    }
 
-		} else if (datatype instanceof TestResult) {
+    private String getImage(Datatype datatype) {
 
-			TestResult testResult = (TestResult) datatype;
-			TestConfigElementStatusType status = testResult.getStatus();
+        if (datatype instanceof TestResultContainer) {
+            datatype = ((TestResultContainer) datatype).getResult();
+        }
 
-			if (status == null) {
-				return ResultImageRegistry.ICON_RUN.getId();
-			}
+        if (datatype instanceof TestConfigurationResult) {
 
-			switch (status) {
-			case FAILED:
-				return ResultImageRegistry.ICON_FAIL.getId();
-			case PASSED:
-				return ResultImageRegistry.ICON_SUCCESS.getId();
-			case SKIPPED:
-				return ResultImageRegistry.ICON_SKIP.getId();
-			}
+            TestConfigurationResult result = (TestConfigurationResult) datatype;
+            TestConfigurationStatusType status = result.getStatus();
 
-		} else if (datatype instanceof TestScriptResult) {
+            if (status == null) {
+                return ResultImageRegistry.ICON_RUN.getId();
+            }
 
-			TestScriptResult testScriptResult = (TestScriptResult) datatype;
-			TestScriptStatusType status = testScriptResult.getStatus();
+            switch (status) {
+            case INITIALIZED:
+                return ResultImageRegistry.ICON_RUN.getId();
+            case RUNNING:
+                return ResultImageRegistry.ICON_RUN.getId();
+            case CANCELLED:
+            case FINISHED:
+                return ICON_RESULT;
+            default:
+                break;
+            }
 
-			if (status == null) {
-				return ResultImageRegistry.ICON_RUN.getId();
-			}
+        } else if (datatype instanceof TestResult) {
 
-			switch (status) {
-			case ABORTED:
-				return ResultImageRegistry.ICON_ABORT.getId();
-			case FAILED:
-				return ResultImageRegistry.ICON_FAIL.getId();
-			case PASSED:
-				return ResultImageRegistry.ICON_SUCCESS.getId();
-			case SKIPPED:
-				return ResultImageRegistry.ICON_SKIP.getId();
-			}
+            TestResult testResult = (TestResult) datatype;
+            TestConfigElementStatusType status = testResult.getStatus();
 
-		} else if (datatype instanceof ScreenshotTrace) {
-			return ResultImageRegistry.ICON_SCREENSHOT.getId();
-		} else if (datatype instanceof FileTrace) {
-			return ResultImageRegistry.ICON_FILE.getId();
-		} else if (datatype instanceof ActionTrace) {
-			return ICON_CLOCK;
-		}
-		return ICON_FOLDER;
-	}
+            if (status == null) {
+                return ResultImageRegistry.ICON_RUN.getId();
+            }
+
+            switch (status) {
+            case FAILED:
+                return ResultImageRegistry.ICON_FAIL.getId();
+            case PASSED:
+                return ResultImageRegistry.ICON_SUCCESS.getId();
+            case SKIPPED:
+                return ResultImageRegistry.ICON_SKIP.getId();
+            }
+
+        } else if (datatype instanceof TestScriptResult) {
+
+            TestScriptResult testScriptResult = (TestScriptResult) datatype;
+            TestScriptStatusType status = testScriptResult.getStatus();
+
+            if (status == null) {
+                return ResultImageRegistry.ICON_RUN.getId();
+            }
+
+            switch (status) {
+            case ABORTED:
+                return ResultImageRegistry.ICON_ABORT.getId();
+            case FAILED:
+                return ResultImageRegistry.ICON_FAIL.getId();
+            case PASSED:
+                return ResultImageRegistry.ICON_SUCCESS.getId();
+            case SKIPPED:
+                return ResultImageRegistry.ICON_SKIP.getId();
+            }
+
+        } else if (datatype instanceof ScreenshotTrace) {
+            return ResultImageRegistry.ICON_SCREENSHOT.getId();
+        } else if (datatype instanceof FileTrace) {
+            return ResultImageRegistry.ICON_FILE.getId();
+        } else if (datatype instanceof ActionTrace) {
+            return ICON_CLOCK;
+        }
+        return ICON_FOLDER;
+    }
 }

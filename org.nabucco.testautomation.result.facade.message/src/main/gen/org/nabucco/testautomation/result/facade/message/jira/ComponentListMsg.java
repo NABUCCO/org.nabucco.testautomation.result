@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.message.jira;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
@@ -38,6 +50,11 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
     /** Constructs a new ComponentListMsg instance. */
     public ComponentListMsg() {
         super();
+        this.initDefaults();
+    }
+
+    /** InitDefaults. */
+    private void initDefaults() {
     }
 
     /**
@@ -47,17 +64,20 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.put(COMPONENTS, PropertyDescriptorSupport.createCollection(COMPONENTS,
-                ProjectComponent.class, 0, PROPERTY_CONSTRAINTS[0], false,
-                PropertyAssociationType.COMPONENT));
+        propertyMap.put(COMPONENTS, PropertyDescriptorSupport.createCollection(COMPONENTS, ProjectComponent.class, 0,
+                PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.COMPONENT));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
+    /** Init. */
+    public void init() {
+        this.initDefaults();
+    }
+
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(ComponentListMsg.getPropertyDescriptor(COMPONENTS),
-                this.components));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ComponentListMsg.getPropertyDescriptor(COMPONENTS), this.components));
         return properties;
     }
 
@@ -117,8 +137,7 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
      */
     public NabuccoList<ProjectComponent> getComponents() {
         if ((this.components == null)) {
-            this.components = new NabuccoListImpl<ProjectComponent>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.components = new NabuccoListImpl<ProjectComponent>(NabuccoCollectionState.INITIALIZED);
         }
         return this.components;
     }
@@ -130,8 +149,7 @@ public class ComponentListMsg extends ServiceMessageSupport implements ServiceMe
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(ComponentListMsg.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(ComponentListMsg.class).getProperty(propertyName);
     }
 
     /**

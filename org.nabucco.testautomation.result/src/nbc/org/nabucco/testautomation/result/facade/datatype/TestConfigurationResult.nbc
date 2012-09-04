@@ -20,8 +20,8 @@ import org.nabucco.framework.base.facade.datatype.Name;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.code.Code;
-import org.nabucco.testautomation.facade.datatype.base.ExportDatatype;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
+import org.nabucco.framework.base.facade.datatype.date.Date;
+import org.nabucco.testautomation.property.facade.datatype.base.TestAutomationDatatype;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
 import org.nabucco.testautomation.result.facade.datatype.status.TestConfigurationStatusType;
 
@@ -29,7 +29,7 @@ import org.nabucco.testautomation.result.facade.datatype.status.TestConfiguratio
 @Company		PRODYNA AG
 @Date			2010-06-01
 @Description	The result list of the execution of a TestConfiguration
-public Datatype TestConfigurationResult extends ExportDatatype {
+public Datatype TestConfigurationResult extends TestAutomationDatatype {
 
 	private Enumeration TestConfigurationStatusType[1] status;
 
@@ -45,9 +45,9 @@ public Datatype TestConfigurationResult extends ExportDatatype {
 
 	private Basetype Identifier[1] testConfigurationId;
 	
-	private Basetype DateValue[0..1] startTime;
+	private Basetype Date[0..1] startTime;
 	
-	private Basetype DateValue[0..1] endTime;
+	private Basetype Date[0..1] endTime;
 	
 	private Basetype Duration[0..1] duration;
 	

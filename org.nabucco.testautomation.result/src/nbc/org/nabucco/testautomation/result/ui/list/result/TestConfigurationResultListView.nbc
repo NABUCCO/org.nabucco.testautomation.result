@@ -37,9 +37,4 @@ public ListView TestConfigurationResultListView {
 	@ColumnLabelDefault 	"Result Name"
 	private Column testConfigurationResultName;
 	
-	@MappedField 			testConfigurationResult.owner
-	@ColumnLabelId			testConfigurationResult.owner 
-	@ColumnLabelDefault 	"Owner"
-	private Column owner;
-	 
 }

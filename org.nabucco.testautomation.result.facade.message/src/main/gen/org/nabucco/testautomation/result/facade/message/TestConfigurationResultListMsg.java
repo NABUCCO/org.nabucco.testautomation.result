@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.message;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
@@ -38,6 +50,11 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
     /** Constructs a new TestConfigurationResultListMsg instance. */
     public TestConfigurationResultListMsg() {
         super();
+        this.initDefaults();
+    }
+
+    /** InitDefaults. */
+    private void initDefaults() {
     }
 
     /**
@@ -47,17 +64,20 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.put(TESTCONFIGRESULTLIST, PropertyDescriptorSupport.createCollection(
-                TESTCONFIGRESULTLIST, TestConfigurationResult.class, 0, PROPERTY_CONSTRAINTS[0],
-                false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(TESTCONFIGRESULTLIST, PropertyDescriptorSupport.createCollection(TESTCONFIGRESULTLIST,
+                TestConfigurationResult.class, 0, PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.COMPOSITION));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
+    /** Init. */
+    public void init() {
+        this.initDefaults();
+    }
+
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(
-                TestConfigurationResultListMsg.getPropertyDescriptor(TESTCONFIGRESULTLIST),
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(TestConfigurationResultListMsg.getPropertyDescriptor(TESTCONFIGRESULTLIST),
                 this.testConfigResultList));
         return properties;
     }
@@ -69,8 +89,7 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
             return true;
         }
         if ((property.getName().equals(TESTCONFIGRESULTLIST) && (property.getType() == TestConfigurationResult.class))) {
-            this.testConfigResultList = ((NabuccoList<TestConfigurationResult>) property
-                    .getInstance());
+            this.testConfigResultList = ((NabuccoList<TestConfigurationResult>) property.getInstance());
             return true;
         }
         return false;
@@ -103,8 +122,7 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
     public int hashCode() {
         final int PRIME = 31;
         int result = super.hashCode();
-        result = ((PRIME * result) + ((this.testConfigResultList == null) ? 0
-                : this.testConfigResultList.hashCode()));
+        result = ((PRIME * result) + ((this.testConfigResultList == null) ? 0 : this.testConfigResultList.hashCode()));
         return result;
     }
 
@@ -120,8 +138,7 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
      */
     public NabuccoList<TestConfigurationResult> getTestConfigResultList() {
         if ((this.testConfigResultList == null)) {
-            this.testConfigResultList = new NabuccoListImpl<TestConfigurationResult>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.testConfigResultList = new NabuccoListImpl<TestConfigurationResult>(NabuccoCollectionState.INITIALIZED);
         }
         return this.testConfigResultList;
     }
@@ -133,8 +150,7 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(TestConfigurationResultListMsg.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(TestConfigurationResultListMsg.class).getProperty(propertyName);
     }
 
     /**
@@ -143,7 +159,6 @@ public class TestConfigurationResultListMsg extends ServiceMessageSupport implem
      * @return the List<NabuccoPropertyDescriptor>.
      */
     public static List<NabuccoPropertyDescriptor> getPropertyDescriptorList() {
-        return PropertyCache.getInstance().retrieve(TestConfigurationResultListMsg.class)
-                .getAllProperties();
+        return PropertyCache.getInstance().retrieve(TestConfigurationResultListMsg.class).getAllProperties();
     }
 }

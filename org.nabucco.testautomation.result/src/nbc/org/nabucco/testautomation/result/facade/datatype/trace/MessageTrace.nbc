@@ -25,10 +25,10 @@ import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 @Description	The tracing information containing request and response
 public Datatype MessageTrace extends ActionTrace {
 
-	@MaxLength 100000
+	@MaxLength 1000000
 	private Basetype LogTrace[0..1] request;
 
-	@MaxLength 100000
+	@MaxLength 1000000
 	private Basetype LogTrace[0..1] response;
 
 }

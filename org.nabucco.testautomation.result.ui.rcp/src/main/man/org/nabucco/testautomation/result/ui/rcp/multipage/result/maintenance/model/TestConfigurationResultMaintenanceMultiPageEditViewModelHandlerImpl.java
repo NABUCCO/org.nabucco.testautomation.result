@@ -1,12 +1,12 @@
 /*
- * Copyright 2010 PRODYNA AG
+ * Copyright 2012 PRODYNA AG
  *
  * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.opensource.org/licenses/eclipse-1.0.php or
- * http://www.nabucco-source.org/nabucco-license.html
+ * http://www.nabucco.org/License.html
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,6 +48,7 @@ import org.nabucco.framework.plugin.base.component.picker.dialog.ElementPickerPa
 import org.nabucco.framework.plugin.base.component.picker.dialog.LabelForDialog;
 import org.nabucco.framework.plugin.base.layout.ImageProvider;
 import org.nabucco.framework.plugin.base.logging.NabuccoLogMessage;
+import org.nabucco.testautomation.property.ui.rcp.util.LoggingUtility;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
@@ -288,6 +289,7 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModelHandlerImpl
 	public TestConfigurationResult createDefaultDatatype() {
 		TestConfigurationResult testConfigurationResult = new TestConfigurationResult();
 		testConfigurationResult.setName("");
+		testConfigurationResult.setIdentificationKey("");
 		return testConfigurationResult;
 	}
 
@@ -313,8 +315,8 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModelHandlerImpl
 
 	private NabuccoTableColumnInfo[] createColumnInfo() {
 		NabuccoTableColumnInfo[] result = new NabuccoTableColumnInfo[] { new NabuccoTableColumnInfo(
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.title",
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.tooltip",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.title",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.tooltip",
 				200, new TestConfigurationResultMaintenanceMasterDetailAddDialogLabelProvider()) };
 		return result;
 	}
@@ -322,12 +324,12 @@ public class TestConfigurationResultMaintenanceMultiPageEditViewModelHandlerImpl
 	@Override
 	public LabelForDialog getLabelForDialog() {
 		LabelForDialog result = new LabelForDialog(
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.title",
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.message",
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.shellTitle",
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.messageTable",
-				"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.messageCombo",
-		"org.nabucco.testautomation.script.ui.rcp.multipage.maintainance.model.pathLabel");
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.title",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.message",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.shellTitle",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.messageTable",
+				"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.messageCombo",
+		"org.nabucco.testautomation.script.ui.rcp.multipage.maintenance.model.pathLabel");
 		return result;
 	}
 

@@ -1,19 +1,19 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2012 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.masterdetail;
 
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import org.nabucco.framework.plugin.base.component.multipage.masterdetail.Master
 import org.nabucco.framework.plugin.base.component.multipage.masterdetail.MasterDetailBlockLayouter;
 import org.nabucco.framework.plugin.base.layout.Layoutable;
 import org.nabucco.framework.plugin.base.view.NabuccoMessageManager;
+import org.nabucco.testautomation.property.ui.rcp.multipage.detail.PropertyDetailPageView;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
@@ -39,10 +40,8 @@ import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.mas
 import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.masterdetail.detail.screenshot.ScreenshotDetailPageView;
 import org.nabucco.testautomation.result.ui.rcp.multipage.result.maintenance.model.TestConfigurationResultMaintenanceMultiPageEditViewModel;
 
-import org.nabucco.testautomation.ui.rcp.multipage.detail.TestautomationDetailPageView;
-
 /**
- * TestConfigurationMaintainanceMasterDetailBlock
+ * TestConfigurationMaintenanceMasterDetailBlock
  * 
  * @author Markus Jorroch, PRODYNA AG
  */
@@ -86,7 +85,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("environmentType");
     	readOnlyProperties.add("releaseType");
     	readOnlyProperties.add("duration");
-        detailsPart.registerPage(TestConfigurationResult.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(TestConfigurationResult.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "TestConfigurationResult", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(TestConfigurationResult.class, invisibleProperties);
@@ -111,7 +110,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("brandType");
     	readOnlyProperties.add("duration");
         invisibleProperties.add("jiraExport");
-        detailsPart.registerPage(TestResult.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(TestResult.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "TestResult", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(TestResult.class, invisibleProperties);
@@ -141,7 +140,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("userMessage");
     	readOnlyProperties.add("userErrorMessage");
     	readOnlyProperties.add("state");
-        detailsPart.registerPage(ManualTestResult.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(ManualTestResult.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "ManualTestResult", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(ManualTestResult.class, invisibleProperties);
@@ -163,7 +162,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("errorMessage");
     	readOnlyProperties.add("logging");
     	readOnlyProperties.add("duration");
-        detailsPart.registerPage(TestScriptResult.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(TestScriptResult.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "TestScriptResult", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(TestScriptResult.class, invisibleProperties);
@@ -175,7 +174,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("endTime");
     	readOnlyProperties.add("duration");
     	readOnlyProperties.add("stackTrace");
-        detailsPart.registerPage(ActionTrace.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(ActionTrace.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "ActionTrace", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(ActionTrace.class, invisibleProperties);
@@ -189,7 +188,7 @@ public class TestConfigurationResultMaintenanceMasterDetailBlock extends
     	readOnlyProperties.add("stackTrace");
     	readOnlyProperties.add("request");
     	readOnlyProperties.add("response");
-        detailsPart.registerPage(MessageTrace.class, new TestautomationDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
+        detailsPart.registerPage(MessageTrace.class, new PropertyDetailPageView<TestConfigurationResultMaintenanceMultiPageEditViewModel>(this,
                 getManagedForm(), getManagedFormViewPart(), nabuccoMessageManager, ID, ID
                         + "MessageTrace", invisibleProperties, readOnlyProperties));
         typeToInvisiblePropertiesMap.put(MessageTrace.class, invisibleProperties);

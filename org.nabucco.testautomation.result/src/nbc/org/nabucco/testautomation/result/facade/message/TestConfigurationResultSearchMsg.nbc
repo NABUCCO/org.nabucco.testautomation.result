@@ -16,10 +16,10 @@
 */
 package org.nabucco.testautomation.result.facade.message;
 
-import org.nabucco.framework.base.facade.datatype.Owner;
-import org.nabucco.framework.base.facade.datatype.Name;
-import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.DateTime;
+import org.nabucco.framework.base.facade.datatype.Identifier;
+import org.nabucco.framework.base.facade.datatype.Key;
+import org.nabucco.framework.base.facade.datatype.Name;
 
 @Author			Steffen Schmidt
 @Company		PRODYNA AG
@@ -28,15 +28,15 @@ import org.nabucco.framework.base.facade.datatype.DateTime;
 @Description	Message for searching TestConfigurationResults
 public Message TestConfigurationResultSearchMsg {
 
-	private Basetype Owner[0..1] owner;
-	
 	private Basetype Identifier[0..1] id;
+
+	private Basetype Key[0..1] identificationKey;
 
 	private Basetype Name[0..1] name;
 
-	private Basetype Name[0..1] testConfigurationName;
-
 	private Basetype Identifier[0..1] testConfigurationId;
+
+	private Basetype Name[0..1] testConfigurationName;
 	
 	private Basetype DateTime[0..1] startTime;
 

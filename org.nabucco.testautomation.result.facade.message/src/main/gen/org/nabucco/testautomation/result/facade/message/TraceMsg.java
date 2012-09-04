@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.message;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
@@ -35,6 +47,11 @@ public class TraceMsg extends ServiceMessageSupport implements ServiceMessage {
     /** Constructs a new TraceMsg instance. */
     public TraceMsg() {
         super();
+        this.initDefaults();
+    }
+
+    /** InitDefaults. */
+    private void initDefaults() {
     }
 
     /**
@@ -44,15 +61,20 @@ public class TraceMsg extends ServiceMessageSupport implements ServiceMessage {
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.put(TRACE, PropertyDescriptorSupport.createDatatype(TRACE, ActionTrace.class,
-                0, PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(TRACE, PropertyDescriptorSupport.createDatatype(TRACE, ActionTrace.class, 0,
+                PROPERTY_CONSTRAINTS[0], false, PropertyAssociationType.COMPOSITION));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
+    /** Init. */
+    public void init() {
+        this.initDefaults();
+    }
+
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(TraceMsg.getPropertyDescriptor(TRACE), this.trace));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(TraceMsg.getPropertyDescriptor(TRACE), this.getTrace()));
         return properties;
     }
 

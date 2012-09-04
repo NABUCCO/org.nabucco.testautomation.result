@@ -1,30 +1,30 @@
 /*
-* Copyright 2010 PRODYNA AG
-*
-* Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.opensource.org/licenses/eclipse-1.0.php or
-* http://www.nabucco-source.org/nabucco-license.html
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2012 PRODYNA AG
+ *
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.nabucco.testautomation.result.impl.service.maintain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.nabucco.framework.base.facade.component.NabuccoInstance;
 import org.nabucco.framework.base.facade.datatype.DatatypeState;
+import org.nabucco.framework.base.facade.datatype.code.Code;
 import org.nabucco.framework.base.facade.datatype.visitor.DatatypeVisitor;
-import org.nabucco.framework.base.facade.exception.persistence.PersistenceException;
-import org.nabucco.framework.base.facade.exception.persistence.PersistenceExceptionMapper;
 import org.nabucco.framework.base.facade.exception.service.MaintainException;
-import org.nabucco.framework.base.impl.service.maintain.PersistenceHelper;
+import org.nabucco.framework.base.impl.service.maintain.PersistenceExceptionMapper;
 import org.nabucco.testautomation.result.facade.datatype.TestConfigurationResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.TestResultContainer;
@@ -32,344 +32,347 @@ import org.nabucco.testautomation.result.facade.datatype.TestScriptResult;
 import org.nabucco.testautomation.result.facade.datatype.manual.ManualTestResult;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.message.TestConfigurationResultMsg;
-import org.nabucco.testautomation.result.impl.service.DynamicCodeSupport;
+import org.nabucco.testautomation.result.impl.service.maintain.support.ResultMaintainSupport;
 import org.nabucco.testautomation.result.impl.service.maintain.visitor.TestConfigurationResultModificationVisitor;
-
 
 /**
  * MaintainTestConfigurationResultServiceHandlerImpl
  * 
  * @author Steffen Schmidt, PRODYNA AG
  */
-public class MaintainTestConfigurationResultServiceHandlerImpl extends
-		MaintainTestConfigurationResultServiceHandler {
+public class MaintainTestConfigurationResultServiceHandlerImpl extends MaintainTestConfigurationResultServiceHandler {
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String PREFIX = "RESU-";
-	
-	private PersistenceHelper persistenceHelper;
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected TestConfigurationResultMsg maintainTestConfigurationResult(
-			TestConfigurationResultMsg msg) throws MaintainException {
-		
-		TestConfigurationResult result = msg.getTestConfigurationResult();
-		
-		// Set owner
-		if (result.getOwner() == null || result.getOwner().getValue() == null) {
-			result.setOwner(NabuccoInstance.getInstance().getOwner());
-		}
-		
-		try {
-			// initialize PersistenceHelper
-			this.persistenceHelper = new PersistenceHelper(super.getEntityManager());
-			
-			if (result.getDatatypeState() == DatatypeState.PERSISTENT) {
-				DatatypeVisitor visitor = new TestConfigurationResultModificationVisitor(result);
-				result.accept(visitor);
-			}
-			
+    private static final String PREFIX = "RESU-";
+
+    private ResultMaintainSupport support;
+
+    private Map<Long, Code> codeMap;
+
+    @Override
+    protected TestConfigurationResultMsg maintainTestConfigurationResult(TestConfigurationResultMsg msg)
+            throws MaintainException {
+
+        TestConfigurationResult result = msg.getTestConfigurationResult();
+        this.codeMap = new HashMap<Long, Code>();
+
+        try {
+            // initialize PersistenceHelper
+            this.support = new ResultMaintainSupport(super.getPersistenceManager());
+
+            if (result.getDatatypeState() == DatatypeState.PERSISTENT) {
+                DatatypeVisitor visitor = new TestConfigurationResultModificationVisitor(result);
+                result.accept(visitor);
+            }
+
             switch (result.getDatatypeState()) {
 
             case CONSTRUCTED:
                 throw new MaintainException("TestConfigurationResult is not initialized.");
             case INITIALIZED:
-            	result = this.create(result);
+                result = this.create(result);
                 break;
             case MODIFIED:
-            	result = this.update(result);
+                result = this.update(result);
                 break;
             case DELETED:
-            	this.delete(result);
-            	result = null;
-            	return msg;
+                this.delete(result);
+                getLogger().info("TestConfigurationResult '" + result.getName() + "' [" + result.getId() + "] deleted");
+
+                result = null;
+                return msg;
             case TRANSIENT:
                 break;
             case PERSISTENT:
                 break;
             default:
                 throw new MaintainException("Datatype state '"
-                        + result.getDatatypeState()
-                        + "' is not valid for TestConfigurationResult.");
+                        + result.getDatatypeState() + "' is not valid for TestConfigurationResult.");
             }
+
+            this.getPersistenceManager().flush();
+            this.support = null;
+
         } catch (Exception ex) {
-			throw new MaintainException("Error maintaining TestConfigurationResult",
-					PersistenceExceptionMapper.resolve(ex,
-							TestConfigurationResult.class.getName(),
-							result.getId()));
+            throw new MaintainException("Error maintaining TestConfigurationResult",
+                    PersistenceExceptionMapper.resolve(ex, TestConfigurationResult.class.getName(), result.getId()));
 
         }
-        
-        this.persistenceHelper.flush();
-        this.persistenceHelper = null;
-        
+
+        // Resolve
         if (result != null) {
-        	load(result);
+            resolve(result);
+            getLogger().info(
+                    "TestConfigurationResult '"
+                            + result.getName() + "' [" + result.getId() + "] successfully maintained");
         }
+
         msg.setTestConfigurationResult(result);
-		return msg;
-	}
-	
-	private void load(TestConfigurationResult testConfigResult) {
-		
-		for (TestResultContainer container : testConfigResult.getTestResultList()) {
-			load(container);
-		}
-		
-		try {
-			DynamicCodeSupport.getInstance().resolveDynamicCodes(testConfigResult, getContext());
-		} catch (Exception ex) {
-			super.getLogger().error(ex, "Could not resolve DynamicCodes for TestConfigurationResult");
-		}
-		testConfigResult.setDatatypeState(DatatypeState.PERSISTENT);
-	}
-	
-	private void load(TestResultContainer container) {
-		
-		TestResult result = container.getResult();
-		
-		for (TestResultContainer child : result.getTestResultList()) {
-			load(child);
-		}
-		
-		for (TestScriptResult scriptResult : result.getTestScriptResultList()) {
-			load(scriptResult);
-		}
-		
-		if (result instanceof ManualTestResult) {
-			
-			for (ActionTrace trace : ((ManualTestResult) result).getActionTraceList()) {
-				trace.setDatatypeState(DatatypeState.PERSISTENT);
-			}
-		}
-		
-		try {
-			DynamicCodeSupport.getInstance().resolveDynamicCodes(result, getContext());
-		} catch (Exception ex) {
-			super.getLogger().error(ex, "Could not resolve DynamicCodes for TestConfigurationResult");
-		}
-		
-		container.setDatatypeState(DatatypeState.PERSISTENT);
-		result.setDatatypeState(DatatypeState.PERSISTENT);
-	}
-	
-	private void load(TestScriptResult result) {
-		
-		for (ActionTrace trace : result.getActionTraceList()) {
-			trace.setDatatypeState(DatatypeState.PERSISTENT);
-		}
-		result.setDatatypeState(DatatypeState.PERSISTENT);
-	}
-	
-	private TestConfigurationResult create(TestConfigurationResult entity)
-			throws PersistenceException {
+        return msg;
+    }
 
-		List<TestResultContainer> testResultList = entity.getTestResultList();
+    private void resolve(TestConfigurationResult testConfigResult) {
 
-		for (int i = 0; i < testResultList.size(); i++) {
-			TestResultContainer updatedTestResult = create(testResultList.get(i));
-			testResultList.set(i, updatedTestResult);
-		}
+        for (TestResultContainer container : testConfigResult.getTestResultList()) {
+            resolve(container);
+        }
 
-		entity.setOwner(NabuccoInstance.getInstance().getOwner());
-		entity = this.persistenceHelper.persist(entity);
-		entity.setIdentificationKey(PREFIX + entity.getId());
-		entity.setDatatypeState(DatatypeState.MODIFIED);
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
+        if (testConfigResult.getEnvironmentTypeRefId() != null) {
+            testConfigResult.setEnvironmentType(this.codeMap.get(testConfigResult.getEnvironmentTypeRefId()));
+        }
 
-	private TestResultContainer create(TestResultContainer entity)
-			throws PersistenceException {
-		
-		TestResult result = entity.getResult();
-		
-		if (result instanceof ManualTestResult) {
-			result = create((ManualTestResult) result);
-		} else {
-			result = create((TestResult) result);
-		}
-		
-		entity.setResult(result);
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
-	
-	private TestResult create(TestResult entity) throws PersistenceException {
-		
-		List<TestResultContainer> testResultList = entity.getTestResultList();
+        if (testConfigResult.getReleaseTypeRefId() != null) {
+            testConfigResult.setReleaseType(this.codeMap.get(testConfigResult.getReleaseTypeRefId()));
+        }
+    }
 
-		for (int i = 0; i < testResultList.size(); i++) {
-			TestResultContainer updatedTestResult = create(testResultList.get(i));
-			testResultList.set(i, updatedTestResult);
-		}
-		
-		List<TestScriptResult> scriptResultList = entity.getTestScriptResultList();
-		
-		for (int i = 0; i < scriptResultList.size(); i++) {
-			TestScriptResult updatedScriptResult = create(scriptResultList.get(i));
-			scriptResultList.set(i, updatedScriptResult);
-		}
-		
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
-	
-	private ManualTestResult create(ManualTestResult entity) throws PersistenceException {
-		
-		List<TestResultContainer> testResultList = entity.getTestResultList();
+    private void resolve(TestResultContainer container) {
 
-		for (int i = 0; i < testResultList.size(); i++) {
-			TestResultContainer updatedTestResult = create(testResultList.get(i));
-			testResultList.set(i, updatedTestResult);
-		}
-		
-		List<ActionTrace> actionTraceList = entity.getActionTraceList();
-		
-		for (int i = 0; i < actionTraceList.size(); i++) {
-			ActionTrace updatedActionTrace = create(actionTraceList.get(i));
-			actionTraceList.set(i, updatedActionTrace);
-		}
+        TestResult result = container.getResult();
 
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
-	
-	private TestScriptResult create(TestScriptResult testScriptResult) throws PersistenceException {
-		
-		List<ActionTrace> actionTraceList = testScriptResult.getActionTraceList();
-		
-		for (int i = 0; i < actionTraceList.size(); i++) {
-			ActionTrace updatedActionTrace = create(actionTraceList.get(i));
-			actionTraceList.set(i, updatedActionTrace);
-		}
+        for (TestResultContainer child : result.getTestResultList()) {
+            resolve(child);
+        }
 
-		testScriptResult = this.persistenceHelper.persist(testScriptResult);
-		return testScriptResult;
-	}
+        result.getTestScriptResultList().size();
 
-	private ActionTrace create(ActionTrace actionTrace) throws PersistenceException {
-		actionTrace = this.persistenceHelper.persist(actionTrace);
-		return actionTrace;
-	}
+        // Resolve DynamicCodes
+        if (result.getBrandTypeRefId() != null) {
+            result.setBrandType(this.codeMap.get(result.getBrandTypeRefId()));
+        }
+    }
 
-	private TestConfigurationResult update(TestConfigurationResult entity)
-			throws PersistenceException {
+    private TestConfigurationResult create(TestConfigurationResult entity) throws MaintainException {
 
-		List<TestResultContainer> testResultList = entity.getTestResultList();
+        List<TestResultContainer> testResultList = entity.getTestResultList();
 
-		for (int i = 0; i < testResultList.size(); i++) {
-			TestResultContainer updatedTestResult = update(testResultList.get(i));
-			testResultList.set(i, updatedTestResult);
-		}
+        for (int i = 0; i < testResultList.size(); i++) {
+            TestResultContainer updatedTestResult = create(testResultList.get(i));
+            testResultList.set(i, updatedTestResult);
+        }
 
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
+        if (!this.codeMap.containsKey(entity.getEnvironmentTypeRefId())) {
+            this.codeMap.put(entity.getEnvironmentTypeRefId(), entity.getEnvironmentType());
+        }
 
-	private TestResultContainer update(TestResultContainer entity)
-			throws PersistenceException {
+        if (!this.codeMap.containsKey(entity.getReleaseTypeRefId())) {
+            this.codeMap.put(entity.getReleaseTypeRefId(), entity.getReleaseType());
+        }
 
-		TestResult result = entity.getResult();
-		
-		if (result instanceof ManualTestResult) {
-			result = update((ManualTestResult) result);
-		} else {
-			result = update((TestResult) result);
-		}
-		
-		entity.setResult(result);
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
-	
-	public TestResult update(TestResult entity) throws PersistenceException {
-		
-		List<TestResultContainer> testResultList = entity.getTestResultList();
+        entity = this.support.maintain(entity);
+        entity.setIdentificationKey(PREFIX + entity.getId());
+        entity.setDatatypeState(DatatypeState.MODIFIED);
+        entity = this.support.maintain(entity);
+        return entity;
+    }
 
-		for (int i = 0; i < testResultList.size(); i++) {
-			TestResultContainer updatedTestResult = update(testResultList.get(i));
-			testResultList.set(i, updatedTestResult);
-		}
+    private TestResultContainer create(TestResultContainer entity) throws MaintainException {
 
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
+        TestResult result = entity.getResult();
 
-	public TestResult update(ManualTestResult entity) throws PersistenceException {
-		
-		List<ActionTrace> actionTraceList = entity.getActionTraceList();
+        if (result instanceof ManualTestResult) {
+            result = create((ManualTestResult) result);
+        } else {
+            result = create((TestResult) result);
+        }
 
-		for (int i = 0; i < actionTraceList.size(); i++) {
-			ActionTrace trace = update(actionTraceList.get(i));
-			actionTraceList.set(i, trace);
-		}
+        entity.setResult(result);
+        entity = this.support.maintain(entity);
+        return entity;
+    }
 
-		entity = this.persistenceHelper.persist(entity);
-		return entity;
-	}
-	
-	private ActionTrace update(ActionTrace actionTrace) throws PersistenceException {
-		
-		actionTrace = this.persistenceHelper.persist(actionTrace);
-		return actionTrace;
-	}
+    private TestResult create(TestResult entity) throws MaintainException {
 
-	private void delete(TestConfigurationResult entity)
-			throws PersistenceException {
+        List<TestResultContainer> testResultList = entity.getTestResultList();
 
-		if (entity.getId() == null) {
-			return;
-		}
-		
-		for (TestResultContainer testResult : entity.getTestResultList()) {
-			delete(testResult);
-		}
-	
-		this.persistenceHelper.persist(entity);
-	}
+        for (int i = 0; i < testResultList.size(); i++) {
+            TestResultContainer updatedTestResult = create(testResultList.get(i));
+            testResultList.set(i, updatedTestResult);
+        }
 
-	private void delete(TestResultContainer entity) throws PersistenceException {
-		
-		TestResult testResult = entity.getResult();
-		List<TestResultContainer> subResultList = testResult.getTestResultList();
-		
-		for (TestResultContainer child : subResultList) {
-			delete(child);
-		}
-		
-		for (TestScriptResult scriptResult : testResult.getTestScriptResultList()) {
-			delete(scriptResult);
-		}
-		
-		if (testResult instanceof ManualTestResult) {
-			ManualTestResult manualResult = (ManualTestResult) testResult;
-			
-			for (ActionTrace trace : manualResult.getActionTraceList()) {
-				trace.setDatatypeState(DatatypeState.DELETED);
-				this.persistenceHelper.persist(trace);
-			}
-		}
-		
-		// Delete TestResultContainer
-		entity.setDatatypeState(DatatypeState.DELETED);
-		this.persistenceHelper.persist(entity);
+        List<TestScriptResult> scriptResultList = entity.getTestScriptResultList();
 
-		// Delete TestResult
-		testResult.setDatatypeState(DatatypeState.DELETED);
-		this.persistenceHelper.persist(testResult);
-	}
-	
-	private void delete(TestScriptResult entity) throws PersistenceException {
+        for (int i = 0; i < scriptResultList.size(); i++) {
+            TestScriptResult updatedScriptResult = create(scriptResultList.get(i));
+            scriptResultList.set(i, updatedScriptResult);
+        }
 
-		for (ActionTrace trace : entity.getActionTraceList()) {
-			trace.setDatatypeState(DatatypeState.DELETED);
-			this.persistenceHelper.persist(trace);
-		}
-		
-		entity.setDatatypeState(DatatypeState.DELETED);
-		this.persistenceHelper.persist(entity);
-	}
+        if (!this.codeMap.containsKey(entity.getBrandTypeRefId())) {
+            this.codeMap.put(entity.getBrandTypeRefId(), entity.getBrandType());
+        }
+
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    private ManualTestResult create(ManualTestResult entity) throws MaintainException {
+
+        List<TestResultContainer> testResultList = entity.getTestResultList();
+
+        for (int i = 0; i < testResultList.size(); i++) {
+            TestResultContainer updatedTestResult = create(testResultList.get(i));
+            testResultList.set(i, updatedTestResult);
+        }
+
+        List<ActionTrace> actionTraceList = entity.getActionTraceList();
+
+        for (int i = 0; i < actionTraceList.size(); i++) {
+            ActionTrace updatedActionTrace = create(actionTraceList.get(i));
+            actionTraceList.set(i, updatedActionTrace);
+        }
+
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    private TestScriptResult create(TestScriptResult testScriptResult) throws MaintainException {
+
+        List<ActionTrace> actionTraceList = testScriptResult.getActionTraceList();
+
+        for (int i = 0; i < actionTraceList.size(); i++) {
+            ActionTrace updatedActionTrace = create(actionTraceList.get(i));
+            actionTraceList.set(i, updatedActionTrace);
+        }
+
+        testScriptResult = this.support.maintain(testScriptResult);
+        return testScriptResult;
+    }
+
+    private ActionTrace create(ActionTrace actionTrace) throws MaintainException {
+        actionTrace = this.support.maintain(actionTrace);
+        return actionTrace;
+    }
+
+    private TestConfigurationResult update(TestConfigurationResult entity) throws MaintainException {
+
+        List<TestResultContainer> testResultList = entity.getTestResultList();
+
+        for (int i = 0; i < testResultList.size(); i++) {
+            TestResultContainer updatedTestResult = update(testResultList.get(i));
+            testResultList.set(i, updatedTestResult);
+        }
+
+        if (!this.codeMap.containsKey(entity.getEnvironmentTypeRefId())) {
+            this.codeMap.put(entity.getEnvironmentTypeRefId(), entity.getEnvironmentType());
+        }
+
+        if (!this.codeMap.containsKey(entity.getReleaseTypeRefId())) {
+            this.codeMap.put(entity.getReleaseTypeRefId(), entity.getReleaseType());
+        }
+
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    private TestResultContainer update(TestResultContainer entity) throws MaintainException {
+
+        TestResult result = entity.getResult();
+
+        if (result instanceof ManualTestResult) {
+            result = update((ManualTestResult) result);
+        } else {
+            result = update((TestResult) result);
+        }
+
+        entity.setResult(result);
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    public TestResult update(TestResult entity) throws MaintainException {
+
+        List<TestResultContainer> testResultList = entity.getTestResultList();
+
+        for (int i = 0; i < testResultList.size(); i++) {
+            TestResultContainer updatedTestResult = update(testResultList.get(i));
+            testResultList.set(i, updatedTestResult);
+        }
+
+        if (!this.codeMap.containsKey(entity.getBrandTypeRefId())) {
+            this.codeMap.put(entity.getBrandTypeRefId(), entity.getBrandType());
+        }
+
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    public TestResult update(ManualTestResult entity) throws MaintainException {
+
+        List<ActionTrace> actionTraceList = entity.getActionTraceList();
+
+        for (int i = 0; i < actionTraceList.size(); i++) {
+            ActionTrace trace = update(actionTraceList.get(i));
+            actionTraceList.set(i, trace);
+        }
+
+        if (!this.codeMap.containsKey(entity.getBrandTypeRefId())) {
+            this.codeMap.put(entity.getBrandTypeRefId(), entity.getBrandType());
+        }
+
+        entity = this.support.maintain(entity);
+        return entity;
+    }
+
+    private ActionTrace update(ActionTrace actionTrace) throws MaintainException {
+
+        actionTrace = this.support.maintain(actionTrace);
+        return actionTrace;
+    }
+
+    private void delete(TestConfigurationResult entity) throws MaintainException {
+
+        if (entity.getId() == null) {
+            return;
+        }
+
+        for (TestResultContainer testResult : entity.getTestResultList()) {
+            delete(testResult);
+        }
+
+        this.support.maintain(entity);
+    }
+
+    private void delete(TestResultContainer entity) throws MaintainException {
+
+        TestResult testResult = entity.getResult();
+        List<TestResultContainer> subResultList = testResult.getTestResultList();
+
+        for (TestResultContainer child : subResultList) {
+            delete(child);
+        }
+
+        for (TestScriptResult scriptResult : testResult.getTestScriptResultList()) {
+            delete(scriptResult);
+        }
+
+        if (testResult instanceof ManualTestResult) {
+            ManualTestResult manualResult = (ManualTestResult) testResult;
+
+            for (ActionTrace trace : manualResult.getActionTraceList()) {
+                trace.setDatatypeState(DatatypeState.DELETED);
+                this.support.maintain(trace);
+            }
+        }
+
+        // Delete TestResultContainer
+        entity.setDatatypeState(DatatypeState.DELETED);
+        this.support.maintain(entity);
+
+        // Delete TestResult
+        testResult.setDatatypeState(DatatypeState.DELETED);
+        this.support.maintain(testResult);
+    }
+
+    private void delete(TestScriptResult entity) throws MaintainException {
+
+        for (ActionTrace trace : entity.getActionTraceList()) {
+            trace.setDatatypeState(DatatypeState.DELETED);
+            this.support.maintain(trace);
+        }
+
+        entity.setDatatypeState(DatatypeState.DELETED);
+        this.support.maintain(entity);
+    }
 
 }

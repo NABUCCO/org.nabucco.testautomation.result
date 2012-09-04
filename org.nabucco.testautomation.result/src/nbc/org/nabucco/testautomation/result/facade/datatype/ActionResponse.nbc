@@ -16,9 +16,9 @@
 */
 package org.nabucco.testautomation.result.facade.datatype;
 
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
-import org.nabucco.testautomation.facade.datatype.base.Text;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.base.Text;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
@@ -37,7 +37,7 @@ public Datatype ActionResponse extends TestScriptElementResult {
 	
 	private Basetype Text[0..1] message;
 	
-	@MaxLength 10000
-	private Basetype ErrorMessage[0..1] errorMessage;
+	@MaxLength 100000
+	private Basetype LongText[0..1] errorMessage;
 	
 }

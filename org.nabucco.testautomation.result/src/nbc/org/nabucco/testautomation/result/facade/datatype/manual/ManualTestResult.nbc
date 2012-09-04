@@ -18,7 +18,7 @@ package org.nabucco.testautomation.result.facade.datatype.manual;
 
 import org.nabucco.testautomation.result.facade.datatype.manual.ManualState;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
-import org.nabucco.testautomation.facade.datatype.engine.ContextSnapshot;
+import org.nabucco.testautomation.settings.facade.datatype.engine.ContextSnapshot;
 import org.nabucco.testautomation.result.facade.datatype.TestResult;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
 import org.nabucco.testautomation.result.facade.datatype.trace.MessageTrace;
@@ -40,6 +40,7 @@ public Datatype ManualTestResult extends TestResult {
 	@MaxLength 10000
 	private Basetype LogTrace[0..1] userErrorMessage;
 
+	@FetchStrategy EAGER
 	private Datatype ActionTrace[0..*] actionTraceList;
 	
 	private transient Datatype ScreenshotTrace[0..*] screenshots;

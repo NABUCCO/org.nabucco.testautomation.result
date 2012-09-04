@@ -21,7 +21,7 @@ import org.nabucco.framework.base.facade.datatype.Key;
 import org.nabucco.framework.base.facade.datatype.Name;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
+import org.nabucco.framework.base.facade.datatype.date.Date;
 
 @Author			Steffen Schmidt
 @Company		PRODYNA AG
@@ -34,13 +34,13 @@ public Datatype ActionTrace extends NabuccoDatatype {
 	@MaxLength 16
 	private Basetype Key[0..1] actionId;
 
-	private Basetype DateValue[0..1] startTime;
+	private Basetype Date[0..1] startTime;
 	
-	private Basetype DateValue[0..1] endTime;
+	private Basetype Date[0..1] endTime;
 	
 	private Basetype Duration[0..1] duration;
 	
-	@MaxLength 100000
+	@MaxLength 1000000
 	private Basetype LogTrace[0..1] stackTrace;
 	
 }

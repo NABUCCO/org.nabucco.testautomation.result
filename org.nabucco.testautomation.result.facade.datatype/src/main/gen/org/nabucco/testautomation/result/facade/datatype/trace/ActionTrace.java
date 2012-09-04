@@ -1,23 +1,35 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype.trace;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.Key;
 import org.nabucco.framework.base.facade.datatype.NabuccoDatatype;
 import org.nabucco.framework.base.facade.datatype.Name;
+import org.nabucco.framework.base.facade.datatype.date.Date;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescriptor;
 import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
 import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
 
 /**
  * ActionTrace<p/>The tracing information for an external action call<p/>
@@ -28,8 +40,8 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "l0,255;m1,1;", "l0,16;m0,1;",
-            "l0,n;m0,1;", "l0,n;m0,1;", "l0,n;m0,1;", "l0,100000;m0,1;" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "l0,255;u0,n;m1,1;", "l0,16;u0,n;m0,1;", "l0,n;u0,n;m0,1;",
+            "l0,n;u0,n;m0,1;", "l0,n;u0,n;m0,1;", "l0,1000000;u0,n;m0,1;" };
 
     public static final String NAME = "name";
 
@@ -47,9 +59,9 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
 
     private Key actionId;
 
-    private DateValue startTime;
+    private Date startTime;
 
-    private DateValue endTime;
+    private Date endTime;
 
     private Duration duration;
 
@@ -99,20 +111,20 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class)
-                .getPropertyMap());
-        propertyMap.put(NAME, PropertyDescriptorSupport.createBasetype(NAME, Name.class, 2,
-                PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(ACTIONID, PropertyDescriptorSupport.createBasetype(ACTIONID, Key.class, 3,
-                PROPERTY_CONSTRAINTS[1], false));
-        propertyMap.put(STARTTIME, PropertyDescriptorSupport.createBasetype(STARTTIME,
-                DateValue.class, 4, PROPERTY_CONSTRAINTS[2], false));
-        propertyMap.put(ENDTIME, PropertyDescriptorSupport.createBasetype(ENDTIME, DateValue.class,
-                5, PROPERTY_CONSTRAINTS[3], false));
-        propertyMap.put(DURATION, PropertyDescriptorSupport.createBasetype(DURATION,
-                Duration.class, 6, PROPERTY_CONSTRAINTS[4], false));
-        propertyMap.put(STACKTRACE, PropertyDescriptorSupport.createBasetype(STACKTRACE,
-                LogTrace.class, 7, PROPERTY_CONSTRAINTS[5], false));
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(NabuccoDatatype.class).getPropertyMap());
+        propertyMap.put(NAME,
+                PropertyDescriptorSupport.createBasetype(NAME, Name.class, 3, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(ACTIONID,
+                PropertyDescriptorSupport.createBasetype(ACTIONID, Key.class, 4, PROPERTY_CONSTRAINTS[1], false));
+        propertyMap.put(STARTTIME,
+                PropertyDescriptorSupport.createBasetype(STARTTIME, Date.class, 5, PROPERTY_CONSTRAINTS[2], false));
+        propertyMap.put(ENDTIME,
+                PropertyDescriptorSupport.createBasetype(ENDTIME, Date.class, 6, PROPERTY_CONSTRAINTS[3], false));
+        propertyMap.put(DURATION,
+                PropertyDescriptorSupport.createBasetype(DURATION, Duration.class, 7, PROPERTY_CONSTRAINTS[4], false));
+        propertyMap
+                .put(STACKTRACE, PropertyDescriptorSupport.createBasetype(STACKTRACE, LogTrace.class, 8,
+                        PROPERTY_CONSTRAINTS[5], false));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -122,20 +134,14 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(NAME), this.name,
-                null));
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(ACTIONID),
-                this.actionId, null));
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(STARTTIME),
-                this.startTime, null));
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(ENDTIME),
-                this.endTime, null));
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(DURATION),
-                this.duration, null));
-        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(STACKTRACE),
-                this.stackTrace, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(NAME), this.name, null));
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(ACTIONID), this.actionId, null));
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(STARTTIME), this.startTime, null));
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(ENDTIME), this.endTime, null));
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(DURATION), this.duration, null));
+        properties.add(super.createProperty(ActionTrace.getPropertyDescriptor(STACKTRACE), this.stackTrace, null));
         return properties;
     }
 
@@ -150,11 +156,11 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
         } else if ((property.getName().equals(ACTIONID) && (property.getType() == Key.class))) {
             this.setActionId(((Key) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(STARTTIME) && (property.getType() == DateValue.class))) {
-            this.setStartTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(STARTTIME) && (property.getType() == Date.class))) {
+            this.setStartTime(((Date) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ENDTIME) && (property.getType() == DateValue.class))) {
-            this.setEndTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(ENDTIME) && (property.getType() == Date.class))) {
+            this.setEndTime(((Date) property.getInstance()));
             return true;
         } else if ((property.getName().equals(DURATION) && (property.getType() == Duration.class))) {
             this.setDuration(((Duration) property.getInstance()));
@@ -303,18 +309,18 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getStartTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
 
     /**
      * Missing description at method setStartTime.
      *
-     * @param startTime the DateValue.
+     * @param startTime the Date.
      */
-    public void setStartTime(DateValue startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -328,7 +334,7 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
             if ((startTime == null)) {
                 return;
             }
-            this.startTime = new DateValue();
+            this.startTime = new Date();
         }
         this.startTime.setValue(startTime);
     }
@@ -336,18 +342,18 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
     /**
      * Missing description at method getEndTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getEndTime() {
+    public Date getEndTime() {
         return this.endTime;
     }
 
     /**
      * Missing description at method setEndTime.
      *
-     * @param endTime the DateValue.
+     * @param endTime the Date.
      */
-    public void setEndTime(DateValue endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -361,7 +367,7 @@ public class ActionTrace extends NabuccoDatatype implements Datatype {
             if ((endTime == null)) {
                 return;
             }
-            this.endTime = new DateValue();
+            this.endTime = new Date();
         }
         this.endTime.setValue(endTime);
     }

@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
@@ -13,9 +25,9 @@ import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescri
 import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
 import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
 import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
-import org.nabucco.testautomation.facade.datatype.base.Text;
-import org.nabucco.testautomation.facade.datatype.property.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.PropertyList;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
+import org.nabucco.testautomation.property.facade.datatype.base.Text;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
 import org.nabucco.testautomation.result.facade.datatype.status.ActionStatusType;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
@@ -29,8 +41,8 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m0,1;", "m0,1;", "l0,n;m0,1;",
-            "l0,10000;m0,1;" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "m0,1;", "m0,1;", "l0,n;u0,n;m0,1;",
+            "l0,100000;u0,n;m0,1;" };
 
     public static final String ACTIONSTATUS = "actionStatus";
 
@@ -52,7 +64,7 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
 
     private Text message;
 
-    private ErrorMessage errorMessage;
+    private LongText errorMessage;
 
     /** Constructs a new ActionResponse instance. */
     public ActionResponse() {
@@ -96,20 +108,17 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.putAll(PropertyCache.getInstance().retrieve(TestScriptElementResult.class)
-                .getPropertyMap());
-        propertyMap.put(ACTIONSTATUS, PropertyDescriptorSupport.createEnumeration(ACTIONSTATUS,
-                ActionStatusType.class, 4, PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(RETURNPROPERTIES, PropertyDescriptorSupport.createDatatype(
-                RETURNPROPERTIES, PropertyList.class, 5, PROPERTY_CONSTRAINTS[1], false,
-                PropertyAssociationType.COMPONENT));
-        propertyMap.put(ACTIONTRACE, PropertyDescriptorSupport.createDatatype(ACTIONTRACE,
-                ActionTrace.class, 6, PROPERTY_CONSTRAINTS[2], false,
-                PropertyAssociationType.COMPOSITION));
-        propertyMap.put(MESSAGE, PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 7,
-                PROPERTY_CONSTRAINTS[3], false));
-        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE,
-                ErrorMessage.class, 8, PROPERTY_CONSTRAINTS[4], false));
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(TestScriptElementResult.class).getPropertyMap());
+        propertyMap.put(ACTIONSTATUS, PropertyDescriptorSupport.createEnumeration(ACTIONSTATUS, ActionStatusType.class,
+                5, PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(RETURNPROPERTIES, PropertyDescriptorSupport.createDatatype(RETURNPROPERTIES,
+                PropertyList.class, 6, PROPERTY_CONSTRAINTS[1], false, PropertyAssociationType.COMPONENT));
+        propertyMap.put(ACTIONTRACE, PropertyDescriptorSupport.createDatatype(ACTIONTRACE, ActionTrace.class, 7,
+                PROPERTY_CONSTRAINTS[2], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(MESSAGE,
+                PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 8, PROPERTY_CONSTRAINTS[3], false));
+        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE, LongText.class, 9,
+                PROPERTY_CONSTRAINTS[4], false));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -119,18 +128,17 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONSTATUS),
-                this.actionStatus, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONSTATUS), this.getActionStatus(),
+                null));
         properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(RETURNPROPERTIES),
-                this.returnProperties, this.returnPropertiesRefId));
-        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONTRACE),
-                this.actionTrace, null));
-        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(MESSAGE),
-                this.message, null));
-        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ERRORMESSAGE),
-                this.errorMessage, null));
+                this.getReturnProperties(), this.returnPropertiesRefId));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(ACTIONTRACE), this.getActionTrace(),
+                null));
+        properties.add(super.createProperty(ActionResponse.getPropertyDescriptor(MESSAGE), this.message, null));
+        properties
+                .add(super.createProperty(ActionResponse.getPropertyDescriptor(ERRORMESSAGE), this.errorMessage, null));
         return properties;
     }
 
@@ -151,8 +159,8 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
         } else if ((property.getName().equals(MESSAGE) && (property.getType() == Text.class))) {
             this.setMessage(((Text) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == ErrorMessage.class))) {
-            this.setErrorMessage(((ErrorMessage) property.getInstance()));
+        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == LongText.class))) {
+            this.setErrorMessage(((LongText) property.getInstance()));
             return true;
         }
         return false;
@@ -210,16 +218,12 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
     public int hashCode() {
         final int PRIME = 31;
         int result = super.hashCode();
-        result = ((PRIME * result) + ((this.actionStatus == null) ? 0 : this.actionStatus
-                .hashCode()));
-        result = ((PRIME * result) + ((this.returnProperties == null) ? 0 : this.returnProperties
-                .hashCode()));
-        result = ((PRIME * result) + ((this.returnPropertiesRefId == null) ? 0
-                : this.returnPropertiesRefId.hashCode()));
+        result = ((PRIME * result) + ((this.actionStatus == null) ? 0 : this.actionStatus.hashCode()));
+        result = ((PRIME * result) + ((this.returnProperties == null) ? 0 : this.returnProperties.hashCode()));
+        result = ((PRIME * result) + ((this.returnPropertiesRefId == null) ? 0 : this.returnPropertiesRefId.hashCode()));
         result = ((PRIME * result) + ((this.actionTrace == null) ? 0 : this.actionTrace.hashCode()));
         result = ((PRIME * result) + ((this.message == null) ? 0 : this.message.hashCode()));
-        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage
-                .hashCode()));
+        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage.hashCode()));
         return result;
     }
 
@@ -356,18 +360,18 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
     /**
      * Missing description at method getErrorMessage.
      *
-     * @return the ErrorMessage.
+     * @return the LongText.
      */
-    public ErrorMessage getErrorMessage() {
+    public LongText getErrorMessage() {
         return this.errorMessage;
     }
 
     /**
      * Missing description at method setErrorMessage.
      *
-     * @param errorMessage the ErrorMessage.
+     * @param errorMessage the LongText.
      */
-    public void setErrorMessage(ErrorMessage errorMessage) {
+    public void setErrorMessage(LongText errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -381,7 +385,7 @@ public class ActionResponse extends TestScriptElementResult implements Datatype 
             if ((errorMessage == null)) {
                 return;
             }
-            this.errorMessage = new ErrorMessage();
+            this.errorMessage = new LongText();
         }
         this.errorMessage.setValue(errorMessage);
     }

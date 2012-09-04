@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Duration;
 import org.nabucco.framework.base.facade.datatype.Key;
@@ -13,6 +25,7 @@ import org.nabucco.framework.base.facade.datatype.Name;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoCollectionState;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoList;
 import org.nabucco.framework.base.facade.datatype.collection.NabuccoListImpl;
+import org.nabucco.framework.base.facade.datatype.date.Date;
 import org.nabucco.framework.base.facade.datatype.log.LogTrace;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoProperty;
 import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyContainer;
@@ -20,9 +33,8 @@ import org.nabucco.framework.base.facade.datatype.property.NabuccoPropertyDescri
 import org.nabucco.framework.base.facade.datatype.property.PropertyAssociationType;
 import org.nabucco.framework.base.facade.datatype.property.PropertyCache;
 import org.nabucco.framework.base.facade.datatype.property.PropertyDescriptorSupport;
-import org.nabucco.testautomation.facade.datatype.base.DateValue;
-import org.nabucco.testautomation.facade.datatype.base.ErrorMessage;
-import org.nabucco.testautomation.facade.datatype.base.Text;
+import org.nabucco.testautomation.property.facade.datatype.base.LongText;
+import org.nabucco.testautomation.property.facade.datatype.base.Text;
 import org.nabucco.testautomation.result.facade.datatype.TestScriptElementResult;
 import org.nabucco.testautomation.result.facade.datatype.status.TestScriptStatusType;
 import org.nabucco.testautomation.result.facade.datatype.trace.ActionTrace;
@@ -36,9 +48,11 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,16;m0,1;", "l0,255;m1,1;",
-            "l0,n;m0,1;", "l0,n;m0,1;", "l0,n;m0,1;", "m0,n;", "m0,n;", "l0,n;m0,1;",
-            "l0,10000;m0,1;", "l0,100000;m0,1;" };
+    private static final TestScriptStatusType STATUS_DEFAULT = TestScriptStatusType.PASSED;
+
+    private static final String[] PROPERTY_CONSTRAINTS = { "m1,1;", "l0,16;u0,n;m0,1;", "l0,255;u0,n;m1,1;",
+            "l0,n;u0,n;m0,1;", "l0,n;u0,n;m0,1;", "l0,n;u0,n;m0,1;", "m0,n;", "m0,n;", "l0,n;u0,n;m0,1;",
+            "l0,100000;u0,n;m0,1;", "l0,100000;u0,n;m0,1;" };
 
     public static final String STATUS = "status";
 
@@ -68,9 +82,9 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
 
     private Name testScriptName;
 
-    private DateValue startTime;
+    private Date startTime;
 
-    private DateValue endTime;
+    private Date endTime;
 
     private Duration duration;
 
@@ -80,7 +94,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
 
     private Text message;
 
-    private ErrorMessage errorMessage;
+    private LongText errorMessage;
 
     private LogTrace logging;
 
@@ -92,7 +106,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
 
     /** InitDefaults. */
     private void initDefaults() {
-        status = TestScriptStatusType.PASSED;
+        status = STATUS_DEFAULT;
     }
 
     /**
@@ -142,7 +156,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      */
     List<ActionTrace> getActionTraceListJPA() {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.LAZY);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.EAGER);
         }
         return ((NabuccoListImpl<ActionTrace>) this.actionTraceList).getDelegate();
     }
@@ -154,7 +168,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      */
     void setActionTraceListJPA(List<ActionTrace> actionTraceList) {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.LAZY);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.EAGER);
         }
         ((NabuccoListImpl<ActionTrace>) this.actionTraceList).setDelegate(actionTraceList);
     }
@@ -166,32 +180,32 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
-        propertyMap.putAll(PropertyCache.getInstance().retrieve(TestScriptElementResult.class)
-                .getPropertyMap());
-        propertyMap.put(STATUS, PropertyDescriptorSupport.createEnumeration(STATUS,
-                TestScriptStatusType.class, 4, PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(TESTSCRIPTKEY, PropertyDescriptorSupport.createBasetype(TESTSCRIPTKEY,
-                Key.class, 5, PROPERTY_CONSTRAINTS[1], false));
-        propertyMap.put(TESTSCRIPTNAME, PropertyDescriptorSupport.createBasetype(TESTSCRIPTNAME,
-                Name.class, 6, PROPERTY_CONSTRAINTS[2], false));
-        propertyMap.put(STARTTIME, PropertyDescriptorSupport.createBasetype(STARTTIME,
-                DateValue.class, 7, PROPERTY_CONSTRAINTS[3], false));
-        propertyMap.put(ENDTIME, PropertyDescriptorSupport.createBasetype(ENDTIME, DateValue.class,
-                8, PROPERTY_CONSTRAINTS[4], false));
-        propertyMap.put(DURATION, PropertyDescriptorSupport.createBasetype(DURATION,
-                Duration.class, 9, PROPERTY_CONSTRAINTS[5], false));
-        propertyMap.put(ELEMENTRESULTLIST, PropertyDescriptorSupport.createCollection(
-                ELEMENTRESULTLIST, TestScriptElementResult.class, 10, PROPERTY_CONSTRAINTS[6],
-                false, PropertyAssociationType.COMPOSITION));
-        propertyMap.put(ACTIONTRACELIST, PropertyDescriptorSupport.createCollection(
-                ACTIONTRACELIST, ActionTrace.class, 11, PROPERTY_CONSTRAINTS[7], false,
-                PropertyAssociationType.COMPOSITION));
-        propertyMap.put(MESSAGE, PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 12,
-                PROPERTY_CONSTRAINTS[8], false));
-        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE,
-                ErrorMessage.class, 13, PROPERTY_CONSTRAINTS[9], false));
-        propertyMap.put(LOGGING, PropertyDescriptorSupport.createBasetype(LOGGING, LogTrace.class,
-                14, PROPERTY_CONSTRAINTS[10], false));
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(TestScriptElementResult.class).getPropertyMap());
+        propertyMap.put(STATUS, PropertyDescriptorSupport.createEnumeration(STATUS, TestScriptStatusType.class, 5,
+                PROPERTY_CONSTRAINTS[0], false));
+        propertyMap.put(TESTSCRIPTKEY,
+                PropertyDescriptorSupport.createBasetype(TESTSCRIPTKEY, Key.class, 6, PROPERTY_CONSTRAINTS[1], false));
+        propertyMap
+                .put(TESTSCRIPTNAME, PropertyDescriptorSupport.createBasetype(TESTSCRIPTNAME, Name.class, 7,
+                        PROPERTY_CONSTRAINTS[2], false));
+        propertyMap.put(STARTTIME,
+                PropertyDescriptorSupport.createBasetype(STARTTIME, Date.class, 8, PROPERTY_CONSTRAINTS[3], false));
+        propertyMap.put(ENDTIME,
+                PropertyDescriptorSupport.createBasetype(ENDTIME, Date.class, 9, PROPERTY_CONSTRAINTS[4], false));
+        propertyMap.put(DURATION,
+                PropertyDescriptorSupport.createBasetype(DURATION, Duration.class, 10, PROPERTY_CONSTRAINTS[5], false));
+        propertyMap
+                .put(ELEMENTRESULTLIST, PropertyDescriptorSupport.createCollection(ELEMENTRESULTLIST,
+                        TestScriptElementResult.class, 11, PROPERTY_CONSTRAINTS[6], false,
+                        PropertyAssociationType.COMPOSITION));
+        propertyMap.put(ACTIONTRACELIST, PropertyDescriptorSupport.createCollection(ACTIONTRACELIST, ActionTrace.class,
+                12, PROPERTY_CONSTRAINTS[7], false, PropertyAssociationType.COMPOSITION));
+        propertyMap.put(MESSAGE,
+                PropertyDescriptorSupport.createBasetype(MESSAGE, Text.class, 13, PROPERTY_CONSTRAINTS[8], false));
+        propertyMap.put(ERRORMESSAGE, PropertyDescriptorSupport.createBasetype(ERRORMESSAGE, LongText.class, 14,
+                PROPERTY_CONSTRAINTS[9], false));
+        propertyMap.put(LOGGING,
+                PropertyDescriptorSupport.createBasetype(LOGGING, LogTrace.class, 15, PROPERTY_CONSTRAINTS[10], false));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -201,32 +215,24 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(STATUS),
-                this.status, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(TESTSCRIPTKEY),
-                this.testScriptKey, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(STATUS), this.getStatus(), null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(TESTSCRIPTKEY), this.testScriptKey,
+                null));
         properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(TESTSCRIPTNAME),
                 this.testScriptName, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(STARTTIME),
-                this.startTime, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ENDTIME),
-                this.endTime, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(DURATION),
-                this.duration, null));
-        properties.add(super.createProperty(
-                TestScriptResult.getPropertyDescriptor(ELEMENTRESULTLIST), this.elementResultList,
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(STARTTIME), this.startTime, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ENDTIME), this.endTime, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(DURATION), this.duration, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ELEMENTRESULTLIST),
+                this.elementResultList, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ACTIONTRACELIST),
+                this.actionTraceList, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(MESSAGE), this.message, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ERRORMESSAGE), this.errorMessage,
                 null));
-        properties
-                .add(super.createProperty(TestScriptResult.getPropertyDescriptor(ACTIONTRACELIST),
-                        this.actionTraceList, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(MESSAGE),
-                this.message, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(ERRORMESSAGE),
-                this.errorMessage, null));
-        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(LOGGING),
-                this.logging, null));
+        properties.add(super.createProperty(TestScriptResult.getPropertyDescriptor(LOGGING), this.logging, null));
         return properties;
     }
 
@@ -245,11 +251,11 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
         } else if ((property.getName().equals(TESTSCRIPTNAME) && (property.getType() == Name.class))) {
             this.setTestScriptName(((Name) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(STARTTIME) && (property.getType() == DateValue.class))) {
-            this.setStartTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(STARTTIME) && (property.getType() == Date.class))) {
+            this.setStartTime(((Date) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ENDTIME) && (property.getType() == DateValue.class))) {
-            this.setEndTime(((DateValue) property.getInstance()));
+        } else if ((property.getName().equals(ENDTIME) && (property.getType() == Date.class))) {
+            this.setEndTime(((Date) property.getInstance()));
             return true;
         } else if ((property.getName().equals(DURATION) && (property.getType() == Duration.class))) {
             this.setDuration(((Duration) property.getInstance()));
@@ -263,8 +269,8 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
         } else if ((property.getName().equals(MESSAGE) && (property.getType() == Text.class))) {
             this.setMessage(((Text) property.getInstance()));
             return true;
-        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == ErrorMessage.class))) {
-            this.setErrorMessage(((ErrorMessage) property.getInstance()));
+        } else if ((property.getName().equals(ERRORMESSAGE) && (property.getType() == LongText.class))) {
+            this.setErrorMessage(((LongText) property.getInstance()));
             return true;
         } else if ((property.getName().equals(LOGGING) && (property.getType() == LogTrace.class))) {
             this.setLogging(((LogTrace) property.getInstance()));
@@ -341,16 +347,13 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
         final int PRIME = 31;
         int result = super.hashCode();
         result = ((PRIME * result) + ((this.status == null) ? 0 : this.status.hashCode()));
-        result = ((PRIME * result) + ((this.testScriptKey == null) ? 0 : this.testScriptKey
-                .hashCode()));
-        result = ((PRIME * result) + ((this.testScriptName == null) ? 0 : this.testScriptName
-                .hashCode()));
+        result = ((PRIME * result) + ((this.testScriptKey == null) ? 0 : this.testScriptKey.hashCode()));
+        result = ((PRIME * result) + ((this.testScriptName == null) ? 0 : this.testScriptName.hashCode()));
         result = ((PRIME * result) + ((this.startTime == null) ? 0 : this.startTime.hashCode()));
         result = ((PRIME * result) + ((this.endTime == null) ? 0 : this.endTime.hashCode()));
         result = ((PRIME * result) + ((this.duration == null) ? 0 : this.duration.hashCode()));
         result = ((PRIME * result) + ((this.message == null) ? 0 : this.message.hashCode()));
-        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage
-                .hashCode()));
+        result = ((PRIME * result) + ((this.errorMessage == null) ? 0 : this.errorMessage.hashCode()));
         result = ((PRIME * result) + ((this.logging == null) ? 0 : this.logging.hashCode()));
         return result;
     }
@@ -462,18 +465,18 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
     /**
      * Missing description at method getStartTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
 
     /**
      * Missing description at method setStartTime.
      *
-     * @param startTime the DateValue.
+     * @param startTime the Date.
      */
-    public void setStartTime(DateValue startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -487,7 +490,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
             if ((startTime == null)) {
                 return;
             }
-            this.startTime = new DateValue();
+            this.startTime = new Date();
         }
         this.startTime.setValue(startTime);
     }
@@ -495,18 +498,18 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
     /**
      * Missing description at method getEndTime.
      *
-     * @return the DateValue.
+     * @return the Date.
      */
-    public DateValue getEndTime() {
+    public Date getEndTime() {
         return this.endTime;
     }
 
     /**
      * Missing description at method setEndTime.
      *
-     * @param endTime the DateValue.
+     * @param endTime the Date.
      */
-    public void setEndTime(DateValue endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -520,7 +523,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
             if ((endTime == null)) {
                 return;
             }
-            this.endTime = new DateValue();
+            this.endTime = new Date();
         }
         this.endTime.setValue(endTime);
     }
@@ -565,8 +568,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      */
     public NabuccoList<TestScriptElementResult> getElementResultList() {
         if ((this.elementResultList == null)) {
-            this.elementResultList = new NabuccoListImpl<TestScriptElementResult>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.elementResultList = new NabuccoListImpl<TestScriptElementResult>(NabuccoCollectionState.INITIALIZED);
         }
         return this.elementResultList;
     }
@@ -578,8 +580,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      */
     public NabuccoList<ActionTrace> getActionTraceList() {
         if ((this.actionTraceList == null)) {
-            this.actionTraceList = new NabuccoListImpl<ActionTrace>(
-                    NabuccoCollectionState.INITIALIZED);
+            this.actionTraceList = new NabuccoListImpl<ActionTrace>(NabuccoCollectionState.INITIALIZED);
         }
         return this.actionTraceList;
     }
@@ -620,18 +621,18 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
     /**
      * Missing description at method getErrorMessage.
      *
-     * @return the ErrorMessage.
+     * @return the LongText.
      */
-    public ErrorMessage getErrorMessage() {
+    public LongText getErrorMessage() {
         return this.errorMessage;
     }
 
     /**
      * Missing description at method setErrorMessage.
      *
-     * @param errorMessage the ErrorMessage.
+     * @param errorMessage the LongText.
      */
-    public void setErrorMessage(ErrorMessage errorMessage) {
+    public void setErrorMessage(LongText errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -645,7 +646,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
             if ((errorMessage == null)) {
                 return;
             }
-            this.errorMessage = new ErrorMessage();
+            this.errorMessage = new LongText();
         }
         this.errorMessage.setValue(errorMessage);
     }
@@ -690,8 +691,7 @@ public class TestScriptResult extends TestScriptElementResult implements Datatyp
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(TestScriptResult.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(TestScriptResult.class).getProperty(propertyName);
     }
 
     /**

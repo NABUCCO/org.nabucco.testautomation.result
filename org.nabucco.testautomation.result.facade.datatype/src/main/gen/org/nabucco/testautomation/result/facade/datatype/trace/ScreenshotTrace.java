@@ -1,11 +1,23 @@
 /*
- * NABUCCO Generator, Copyright (c) 2010, PRODYNA AG, Germany. All rights reserved.
+ * Copyright 2012 PRODYNA AG
+ * 
+ * Licensed under the Eclipse Public License (EPL), Version 1.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.opensource.org/licenses/eclipse-1.0.php or
+ * http://www.nabucco.org/License.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 package org.nabucco.testautomation.result.facade.datatype.trace;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.nabucco.framework.base.facade.datatype.Datatype;
 import org.nabucco.framework.base.facade.datatype.Identifier;
 import org.nabucco.framework.base.facade.datatype.image.ImageData;
@@ -25,7 +37,7 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String[] PROPERTY_CONSTRAINTS = { "l0,n;m0,1;", "l0,n;m0,1;" };
+    private static final String[] PROPERTY_CONSTRAINTS = { "l0,n;u0,n;m0,1;", "l0,n;u0,n;m0,1;" };
 
     public static final String SCREENSHOT = "screenshot";
 
@@ -67,12 +79,12 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
      */
     protected static NabuccoPropertyContainer createPropertyContainer() {
         Map<String, NabuccoPropertyDescriptor> propertyMap = new HashMap<String, NabuccoPropertyDescriptor>();
+        propertyMap.putAll(PropertyCache.getInstance().retrieve(ActionTrace.class).getPropertyMap());
+        propertyMap.put(SCREENSHOT, PropertyDescriptorSupport.createBasetype(SCREENSHOT, ImageData.class, 9,
+                PROPERTY_CONSTRAINTS[0], false));
         propertyMap
-                .putAll(PropertyCache.getInstance().retrieve(ActionTrace.class).getPropertyMap());
-        propertyMap.put(SCREENSHOT, PropertyDescriptorSupport.createBasetype(SCREENSHOT,
-                ImageData.class, 8, PROPERTY_CONSTRAINTS[0], false));
-        propertyMap.put(IMAGEID, PropertyDescriptorSupport.createBasetype(IMAGEID,
-                Identifier.class, 9, PROPERTY_CONSTRAINTS[1], false));
+                .put(IMAGEID, PropertyDescriptorSupport.createBasetype(IMAGEID, Identifier.class, 10,
+                        PROPERTY_CONSTRAINTS[1], false));
         return new NabuccoPropertyContainer(propertyMap);
     }
 
@@ -82,12 +94,10 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
     }
 
     @Override
-    public List<NabuccoProperty> getProperties() {
-        List<NabuccoProperty> properties = super.getProperties();
-        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(SCREENSHOT),
-                this.screenshot, null));
-        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(IMAGEID),
-                this.imageId, null));
+    public Set<NabuccoProperty> getProperties() {
+        Set<NabuccoProperty> properties = super.getProperties();
+        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(SCREENSHOT), this.screenshot, null));
+        properties.add(super.createProperty(ScreenshotTrace.getPropertyDescriptor(IMAGEID), this.imageId, null));
         return properties;
     }
 
@@ -223,8 +233,7 @@ public class ScreenshotTrace extends ActionTrace implements Datatype {
      * @return the NabuccoPropertyDescriptor.
      */
     public static NabuccoPropertyDescriptor getPropertyDescriptor(String propertyName) {
-        return PropertyCache.getInstance().retrieve(ScreenshotTrace.class)
-                .getProperty(propertyName);
+        return PropertyCache.getInstance().retrieve(ScreenshotTrace.class).getProperty(propertyName);
     }
 
     /**
